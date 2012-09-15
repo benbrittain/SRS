@@ -5,11 +5,17 @@
   <link href='http://fonts.googleapis.com/css?family=Open+Sans:800' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Gentium+Book+Basic:400,400italic,700' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" type="text/css" href="/static/main.css"/>
+  {% if current_user.is_authenticated() %}
+  <meta name="username" content="{{ current_user.get_id() }}"/>
+  {% endif %}
   {% for asset_url in ['/static/js/jquery.js', '/static/js/underscore.js', '/static/js/backbone.js', '/static/js/thermos.js', '/static/js/main.js'] %}
     <script src="{{ asset_url }}"></script>
   {% endfor %}
 </head>
 <body>
+  {% if current_user.is_authenticated() %}
+    <p class="sidebar">Welcome back, {{ current_user.get_id() }}</p>
+  {% endif %}
   <h1>Aqua<em>mentis</em></h1>
   {% block content %}
   {% endblock %}

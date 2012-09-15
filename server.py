@@ -1,11 +1,11 @@
 import os, json
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, jsonify
 from flask.ext.assets import Environment, Bundle
 from flask.ext.login import (LoginManager, current_user, login_required,
     login_user, logout_user, UserMixin, AnonymousUser, flash,
     confirm_login, fresh_login_required)
 from LoginForm import LoginForm, RegistrationForm
-from mongo import User
+from mongo import User, Deck
 
 app = Flask(__name__)
 
@@ -37,7 +37,7 @@ class DbUser(UserMixin):
 
 @login_manager.user_loader
 def load_user(user_id):
-    user = User.query.get(user_id)
+    user = User.query.filter(User.username == user_id).first()
     if user:
         return DbUser(user)
     else:
@@ -65,14 +65,11 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    next = request.args.get("next")
     user = User.query.filter(User.username == unicode(form.username.data), User.password == unicode(form.password.data)).first()
     if user:
         if login_user(DbUser(user)):
-            ustring = '['
-            for x in user.decks:
-                ustring = ustring +  "{name:\"" + x.name.encode('utf8') + "\"}"
-            ustring = ustring + ']'
-            return render_template('index.html', decks = json.JSONEncoder(ustring))
+            return redirect("/")
     return render_template('login.html')
 
 
@@ -101,8 +98,20 @@ def show_deck(deckName):
 @app.route('/')
 @login_required
 def decks_index():
-    return render_template('index.html', decks = current_user)
+  user = User.query.filter(User.username == current_user.get_id()).first()
+  print json.dumps(user.decks)
+  return render_template('index.html', decks=json.dumps(user.decks))
 
+@app.route('/decks', methods=['POST'])
+def decks_create():
+  print request.json
+  user = User.query.filter(User.username == request.json['username']).first()
+  deck = Deck(name=request.json['name'], cards=[])
+  user.decks.append(deck)
+  if user.save():
+    return jsonify(name=deck.name, cards=[])
+  else:
+    return jsonify(success=False)
 
 #run everything! move into an __init__.py?
 if __name__ == '__main__':

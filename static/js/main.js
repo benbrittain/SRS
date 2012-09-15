@@ -13,8 +13,11 @@
       locals.decks.each(function() {
         return _this.li(".view_deck.button", "" + (deck.get('name')));
       });
-      return this.li('.new_deck.button', function() {
-        return "+ Add new deck";
+      return this.li('.new_deck', function() {
+        this.input('.new_deck_input', {
+          type: 'text'
+        });
+        return this.div('.button', "+ Add new deck");
       });
     });
   });
@@ -146,10 +149,12 @@
     };
 
     DecksView.prototype.createDeck = function() {
-      var deck, name;
-      name = "New Deck Bluh";
+      var deck, name, token;
+      token = $("meta[name='username']").attr("content");
+      name = this.$el.find('.new_deck_input').val();
       deck = new Deck({
-        name: name
+        name: name,
+        username: token
       });
       return deck.save({
         success: this._createDeckSuccess,

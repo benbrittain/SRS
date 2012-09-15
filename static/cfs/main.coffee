@@ -3,8 +3,9 @@ JST['decks'] = thermos.template (locals) ->
   @ul '.bland', ->
     locals.decks.each =>
       @li ".view_deck.button", "#{deck.get('name')}"
-    @li '.new_deck.button', ->
-      "+ Add new deck"
+    @li '.new_deck', ->
+      @input '.new_deck_input', type: 'text'
+      @div '.button', "+ Add new deck"
 JST['deck'] = thermos.template (locals) ->
   @span '.faux_link.go_back', '&laquo; Go back to list of decks'
   @h2 "#{locals.deck.get('name')}"
@@ -55,8 +56,9 @@ class @DecksView extends Backbone.View
     deckView.render()
 
   createDeck: =>
-    name = "New Deck Bluh"
-    deck = new Deck(name: name)
+    token = $("meta[name='username']").attr("content")
+    name = @$el.find('.new_deck_input').val()
+    deck = new Deck(name: name, username: token)
     deck.save(success: @_createDeckSuccess, error: @_createDeckError)
 
   _createDeckSuccess: (deck) =>
