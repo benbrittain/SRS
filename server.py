@@ -4,8 +4,8 @@ from flask.ext.assets import Environment, Bundle
 from flask.ext.login import (LoginManager, current_user, login_required,
     login_user, logout_user, UserMixin, AnonymousUser, flash,
     confirm_login, fresh_login_required)
-from LoginForm import LoginForm, RegistrationForm
-from mongo import User, Deck
+from LoginForm import LoginForm
+from mongo import User, Deck, Card
 from json import JSONEncoder
 
 
@@ -115,6 +115,13 @@ def decks_create():
         return jsonify(name=deck.name, cards=[])
     else:
         return jsonify(success=False)
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
+
 
 #run everything! move into an __init__.py?
 if __name__ == '__main__':
