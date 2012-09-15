@@ -2,9 +2,10 @@
 <html>
 <head>
   <title>aquamentis</title>
-  <link href='http://fonts.googleapis.com/css?family=Open+Sans:800,300' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:800' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Gentium+Book+Basic:400,400italic,700' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" type="text/css" href="/static/main.css"/>
-  {% for asset_url in ['/static/js/underscore.js', '/static/js/backbone.js', '/static/js/main.js'] %}
+  {% for asset_url in ['/static/js/jquery.js', '/static/js/underscore.js', '/static/js/backbone.js', '/static/js/thermos.js', '/static/js/main.js'] %}
     <script src="{{ asset_url }}"></script>
   {% endfor %}
 </head>

@@ -1,8 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
-<ul>
-  {% for deck in [] %}
-    <li></li>
-  {% endfor %}
-</ul>
+<div id="content"></div>
+<script>
+$(function() {
+  var decks = new Decks();
+  var decksView = new DecksView({collection: decks, el: $('#content')});
+  decksView.render();
+});
+</script>
 {% endblock %}
