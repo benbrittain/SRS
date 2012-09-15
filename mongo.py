@@ -16,6 +16,7 @@ class Card(db.Document):
 
 class Deck(db.Document):
     name = db.StringField()
+    userId = db.StringField()
     cards = db.ListField(db.DocumentField('Card'))
 
 class User(db.Document):
