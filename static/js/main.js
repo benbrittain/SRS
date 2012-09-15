@@ -10,7 +10,7 @@
   JST['decks'] = thermos.template(function(locals) {
     return this.ul('.bland', function() {
       var _this = this;
-      locals.decks.each(function() {
+      locals.decks.each(function(deck) {
         return _this.li(".view_deck.button", "" + (deck.get('name')));
       });
       return this.li('.new_deck', function() {

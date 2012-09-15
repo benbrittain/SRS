@@ -1,7 +1,7 @@
 JST = {}
 JST['decks'] = thermos.template (locals) ->
   @ul '.bland', ->
-    locals.decks.each =>
+    locals.decks.each (deck) =>
       @li ".view_deck.button", "#{deck.get('name')}"
     @li '.new_deck', ->
       @input '.new_deck_input', type: 'text'

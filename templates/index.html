@@ -3,7 +3,7 @@
 <div id="content"></div>
 <script>
 $(function() {
-  var decks = new Decks();
+  var decks = new Decks({{ decks|safe }});
   var decksView = new DecksView({collection: decks, el: $('#content')});
   decksView.render();
 });

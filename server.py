@@ -99,8 +99,8 @@ def show_deck(deckName):
 @login_required
 def decks_index():
   user = User.query.filter(User.username == current_user.get_id()).first()
-  print json.dumps(user.decks)
-  return render_template('index.html', decks=json.dumps(user.decks))
+  decks = map(lambda deck: {'name': deck.name, 'cards': deck.cards}, user.decks)
+  return render_template('index.html', decks=json.dumps(decks))
 
 @app.route('/decks', methods=['POST'])
 def decks_create():
