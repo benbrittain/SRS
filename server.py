@@ -104,7 +104,6 @@ def decks_index():
 
 @app.route('/decks', methods=['POST'])
 def decks_create():
-  print request.json
   user = User.query.filter(User.username == request.json['username']).first()
   deck = Deck(name=request.json['name'], cards=[])
   user.decks.append(deck)

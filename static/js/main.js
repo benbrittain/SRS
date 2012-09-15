@@ -13,11 +13,11 @@
       locals.decks.each(function(deck) {
         return _this.li(".view_deck.button", "" + (deck.get('name')));
       });
-      return this.li('.new_deck', function() {
+      return this.li(function() {
         this.input('.new_deck_input', {
           type: 'text'
         });
-        return this.div('.button', "+ Add new deck");
+        return this.div('.new_deck.button', "+ Add new deck");
       });
     });
   });
@@ -103,6 +103,8 @@
 
       this.createDeck = __bind(this.createDeck, this);
 
+      this.inputDeck = __bind(this.inputDeck, this);
+
       this.viewDeck = __bind(this.viewDeck, this);
 
       this.remove = __bind(this.remove, this);
@@ -117,7 +119,8 @@
 
     DecksView.prototype.events = {
       'click .view_deck': 'viewDeck',
-      'click .new_deck': 'createDeck'
+      'click .new_deck': 'createDeck',
+      'keydown .new_deck_input': 'inputDeck'
     };
 
     DecksView.prototype.initialize = function() {
@@ -148,6 +151,12 @@
       return deckView.render();
     };
 
+    DecksView.prototype.inputDeck = function(e) {
+      if (e.which === 13) {
+        return this.createDeck();
+      }
+    };
+
     DecksView.prototype.createDeck = function() {
       var deck, name, token;
       token = $("meta[name='username']").attr("content");
@@ -156,7 +165,7 @@
         name: name,
         username: token
       });
-      return deck.save({
+      return deck.save(null, {
         success: this._createDeckSuccess,
         error: this._createDeckError
       });
