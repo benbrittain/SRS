@@ -2,7 +2,6 @@ html, body {
   margin: 0;
   padding: 0;
   font: 100% "Helvetica Neue", sans-serif;
-  font-family: 'Gentium Book Basic', Georgia, serif;
   color: #333;
 }
 
@@ -29,7 +28,7 @@ h1 em {
   text-transform: none;
   letter-spacing: 0;
   font-style: normal;
-  font-family: 'Gentium Book Basic', Georgia, serif;
+  font-family: "Helvetica Neue", sans-serif;
 }
 
 h2 {
@@ -53,7 +52,7 @@ h2 {
   border-radius: 4px;
   box-shadow: 0 2px #aaa;
   padding: 0 2em;
-  font: 20px/48px 'Gentium Book Basic', Georgia, serif;
+  font: 20px/48px "Helvetica Neue", sans-serif;
   cursor: pointer;
   margin: 1em 0;
 }
@@ -82,17 +81,17 @@ label span {
   margin-top: 24px;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"], textarea {
   border: 2px solid #ccc;
   padding: 3px 6px;
-  font: 20px/24px 'Gentium Book Basic', Georgia, serif;
+  font: 20px/24px "Helvetica Neue", sans-serif;
 }
 
-input[type="text"]:hover, input[type="password"]:hover {
+input[type="text"]:hover, input[type="password"]:hover, textarea:hover {
   border-color: #ddd;
 }
 
-input[type="text"]:focus, input[type="password"]:focus {
+input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
   border-color: #8af;
   outline: none;
 }
@@ -112,4 +111,43 @@ input[type="text"]:focus, input[type="password"]:focus {
   right: 0;
   font-size: 12px;
   line-height: 48px;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.card .left, .card .right {
+  width: 50%;
+  border: 1px solid #ccc;
+  height: 100%;
+  font-size: 24px;
+  height: 300px;
+  box-sizing: border-box;
+}
+
+.card .right {
+  border-left: none;
+}
+
+.clearfix:before,
+.clearfix:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+.add_card.button {
+  margin: 0;
 }

@@ -12,8 +12,13 @@
     return this.ul('.bland', function() {
       var _this = this;
       locals.decks.each(function(deck) {
-        return _this.li(".view_deck.button", "" + (deck.get('name')) + " (" + deck.cards.length + " cards)", {
-          "data-id": deck.id
+        return _this.li(function() {
+          this.div(".view_deck.button", "" + (deck.get('name')) + " (" + deck.cards.length + " cards)", {
+            "data-id": deck.id
+          });
+          return this.div(".edit_deck.button", {
+            "data-id": deck.id
+          }, "Edit");
         });
       });
       return this.li(function() {
@@ -26,14 +31,77 @@
   });
 
   JST['deck'] = thermos.template(function(locals) {
-    return this.h2(function() {
+    this.h2(function() {
       this.span('.faux_link.go_back', 'Your decks');
       return this.text(" &raquo; " + (locals.deck.get('name')));
     });
+    return this.div(function() {
+      return JST['card']({
+        card: locals.deck.cards.at(locals.index)
+      });
+    });
   });
 
-  JST['card'] = thermos.template(function() {
-    return this.div;
+  JST['card'] = thermos.template(function(locals) {
+    this.div('.card', function() {
+      return locals.card.get('front');
+    });
+    return this.div('.buttons', function() {
+      this.div('.one.button', function() {
+        return "1";
+      });
+      this.div('.two.button', function() {
+        return "2";
+      });
+      this.div('.three.button', function() {
+        return "3";
+      });
+      return this.div('.four.button', function() {
+        return "4";
+      });
+    });
+  });
+
+  JST['edit_deck'] = thermos.template(function(locals) {
+    var _this = this;
+    this.h2(function() {
+      this.span('.faux_link.go_back', 'Your decks');
+      return this.text(" &raquo; Edit " + (locals.deck.get('name')));
+    });
+    this.div(function() {
+      return JST['edit_card']();
+    });
+    this.div('.add_card.button', function() {
+      return "+ Save card";
+    });
+    return locals.deck.cards.each(function(card) {
+      return _this.div(function() {
+        return JST['edit_card']({
+          card: card
+        });
+      });
+    });
+  });
+
+  JST['edit_card'] = thermos.template(function(locals) {
+    var card;
+    card = locals.card;
+    return this.div('.card.clearfix', function() {
+      this.textarea('.left', {
+        placeholder: "What is the capital of France?"
+      }, function() {
+        if (card != null) {
+          return card.get('front');
+        }
+      });
+      return this.textarea('.right', {
+        placeholder: "Paris"
+      }, function() {
+        if (card != null) {
+          return card.get('back');
+        }
+      });
+    });
   });
 
   this.Card = (function(_super) {
@@ -123,6 +191,8 @@
     __extends(DecksView, _super);
 
     function DecksView() {
+      this.editDeck = __bind(this.editDeck, this);
+
       this._createDeckError = __bind(this._createDeckError, this);
 
       this._createDeckSuccess = __bind(this._createDeckSuccess, this);
@@ -146,7 +216,8 @@
     DecksView.prototype.events = {
       'click .view_deck': 'viewDeck',
       'click .new_deck': 'createDeck',
-      'keydown .new_deck_input': 'inputDeck'
+      'keydown .new_deck_input': 'inputDeck',
+      'click .edit_deck': 'editDeck'
     };
 
     DecksView.prototype.initialize = function() {
@@ -209,6 +280,18 @@
 
     DecksView.prototype._createDeckError = function() {};
 
+    DecksView.prototype.editDeck = function(e) {
+      var $deck, deck;
+      $deck = this.$el.find(e.target);
+      if (!$deck.hasClass('edit_deck')) {
+        $deck = $deck.closest('.edit_deck');
+      }
+      deck = this.collection.get($deck.data('id'));
+      return this.$el.html(JST['edit_deck']({
+        deck: deck
+      }));
+    };
+
     return DecksView;
 
   })(Backbone.View);
@@ -233,12 +316,55 @@
     };
 
     DeckView.prototype.initialize = function(options) {
-      return this.parent = options.parent, options;
+      this.parent = options.parent;
+      return this.index = 0;
     };
 
     DeckView.prototype.render = function() {
       this.$el.html(this.template({
-        deck: this.model
+        deck: this.model,
+        index: this.index
+      }));
+      return this;
+    };
+
+    DeckView.prototype.goBack = function() {
+      this.remove();
+      return this.parent.$el.show();
+    };
+
+    return DeckView;
+
+  })(Backbone.View);
+
+  this.DeckView = (function(_super) {
+
+    __extends(DeckView, _super);
+
+    function DeckView() {
+      this.goBack = __bind(this.goBack, this);
+
+      this.render = __bind(this.render, this);
+
+      this.initialize = __bind(this.initialize, this);
+      return DeckView.__super__.constructor.apply(this, arguments);
+    }
+
+    DeckView.prototype.template = JST['edit_deck'];
+
+    DeckView.prototype.events = {
+      'click .go_back': 'goBack'
+    };
+
+    DeckView.prototype.initialize = function(options) {
+      this.parent = options.parent;
+      return this.index = 0;
+    };
+
+    DeckView.prototype.render = function() {
+      this.$el.html(this.template({
+        deck: this.model,
+        index: this.index
       }));
       return this;
     };
