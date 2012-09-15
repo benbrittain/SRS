@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, url_for
 from flask.ext.assets import Environment, Bundle
 from flask.ext.login import (LoginManager, current_user, login_required,
     login_user, logout_user, UserMixin, AnonymousUser, flash,
@@ -9,13 +9,12 @@ from mongo import User
 
 app = Flask(__name__)
 
-# Debugging
+## Debugging
 app.debug = (os.environ.get('ENV', 'production') != True)
 app.secret_key= "why do I feel awake at 4am?"
 app.config.from_object(__name__)
 
-#login Manager setup
-
+##login Manager setup
 login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.login_message = u"Please log in to access this page."
@@ -36,7 +35,6 @@ class DbUser(UserMixin):
     def is_authenticated(self):
         return True
 
-
 @login_manager.user_loader
 def load_user(user_id):
     user = User.query.get(user_id)
@@ -45,22 +43,47 @@ def load_user(user_id):
     else:
         return None
 
- 
+#################
+# Routing stuff #
+#################
+
+@app.route('/register')
+def register():
+    pass
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     user = User.query.filter(User.username == unicode(form.username.data), User.password == unicode(form.password.data)).first()
     if user:
         if login_user(DbUser(user)):
-            flash("You have logged in")
-            return render_template('layout.html')
+#            flash("You have logged in")
+            print(user)
+            return render_template('index.html', userId = user )
     return render_template('login.html')
 
 
+@app.route('/profile/')
+@login_required
+show_profile():
+    pass
+
+@app.route('/profile/settings')
+@login_required
+show_settings(deckName):
+    pass
+
+@app.route('/decks/<deckName>')
+@login_required
+show_deck(deckName):
+    pass
+
 @app.route('/')
 @app.route('/decks')
+@login_required
 def decks_index():
-    return render_template('index.html')
+    return render_template('index.html', decks = [1,3,5])
+        
 
 if __name__ == '__main__':
   app.run()
