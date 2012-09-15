@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}Register — {% endblock %}
+
+{% block content %}
+  <p>Spaced-repetition software that's easy to use.</p>
+  <form action="/register" method="post">
+    <label>
+      <span>Username:</span>
+      <input type="text" name="username">
+    </label>
+    <label>
+      <span>Password:</span>
+      <input type="password" name="password">
+    </label>
+    <label>
+      <span>Confirm password:</span>
+      <input type="password" name="confirm_password">
+    </label>
+    <p><input type="submit" value="Sign up!"></p>
+  </form>
+{% endblock %}

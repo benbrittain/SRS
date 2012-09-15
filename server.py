@@ -1,10 +1,10 @@
 import os, json
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request
 from flask.ext.assets import Environment, Bundle
 from flask.ext.login import (LoginManager, current_user, login_required,
     login_user, logout_user, UserMixin, AnonymousUser, flash,
     confirm_login, fresh_login_required)
-from LoginForm import LoginForm
+from LoginForm import LoginForm, RegistrationForm
 from mongo import User
 
 app = Flask(__name__)
@@ -47,9 +47,20 @@ def load_user(user_id):
 # Routing stuff #
 #################
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    pass
+    if request.method == 'POST':
+        check = User.query.filter(User.username == unicode(request.form['username'])).first()
+        if check:
+            flash("user already exists")
+            return render_template('register.html')
+        if request.form['password'] != request.form['confirm_password']:
+            flash("passwords do not match")
+            return render_template('register.html')
+        query = User(username = request.form['username'], password = request.form['password'], decks = [])
+        query.save()
+        return render_template('index.html')
+    return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -57,7 +68,6 @@ def login():
     user = User.query.filter(User.username == unicode(form.username.data), User.password == unicode(form.password.data)).first()
     if user:
         if login_user(DbUser(user)):
-#            flash("You have logged in")
             ustring = '['
             for x in user.decks:
                 ustring = ustring +  "{name:\"" + x.name.encode('utf8') + "\"}"
@@ -91,7 +101,7 @@ def show_deck(deckName):
 @app.route('/')
 @login_required
 def decks_index():
-    return render_template('index.html', decks = [1,3,5])
+    return render_template('index.html', decks = current_user)
 
 
 #run everything! move into an __init__.py?
