@@ -101,18 +101,8 @@ def show_deck(deckName):
 @login_required
 def decks_index():
     user = User.query.filter(User.username == current_user.get_id()).first()
-    decks = map(lambda deck: {'name': deck.name, 'cards': deck.cards}, user.decks)
-    ustring = '['
-    for card in decks:
-        if len(card['cards'])> 0:
-            cardSides = "{front: \" " + card['cards'][0].front.encode('utf8') + " \", back: \" " + card['cards'][0].back.encode('utf8') + " \" }"
-        else:
-            cardSides = "{}"
-        ustring = ustring +  "{name:\"" + card['name'].encode('utf8') + "\", cards: " + cardSides +" }"
-    ustring = ustring + ']'
-        
-    
-    return render_template('index.html', decks=json.dumps(ustring))
+    decks = map(lambda deck: {'name': deck.name, 'cards': [{'front': card.front, 'back': card.back} for card in deck.cards]}, user.decks)
+    return render_template('index.html', decks=json.dumps(decks))
 
 @app.route('/decks', methods=['POST'])
 @login_required
