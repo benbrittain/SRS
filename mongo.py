@@ -5,15 +5,14 @@ app = Flask(__name__)
 app.config['MONGOALCHEMY_DATABASE'] = 'library'
 db = MongoAlchemy(app)
 
-#class MyCustomizedQuery(BaseQuery):
-#    def checkUsername(self, name):
-#        return self.filter(self.type.username == name).first()
-#    def checkPassword(self, password):
-#        return self.filter(self.type.password == password).first()
-
 class Card(db.Document):
+    #stores whats on the card. May be abstracted further out
     front = db.StringField()
     back = db.StringField()
+
+    #used for calculating the SRS numbers
+    interval = db.IntField()
+    eFactor = db.FloatField()
 
 class Deck(db.Document):
     name = db.StringField()
@@ -23,7 +22,3 @@ class User(db.Document):
     username = db.StringField()
     password = db.StringField()
     decks = db.ListField(db.DocumentField('Deck'))
-
-#    query_class = MyCustomizedQuery
-#    decks = db.DocumentField(Deck)
-
