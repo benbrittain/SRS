@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>aquamentis</title>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:800,300' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="/static/main.css"/>
+  {% for asset_url in ['/static/js/underscore.js', '/static/js/backbone.js', '/static/js/main.js'] %}
+    <script src="{{ asset_url }}"></script>
+  {% endfor %}
+</head>
+<body>
+  <h1>Aqua<em>mentis</em></h1>
+  {% block content %}
+  {% endblock %}
+</body>
+</html>
