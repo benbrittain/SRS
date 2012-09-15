@@ -12,11 +12,13 @@ body {
   max-width: 1280px;
   margin: 0 auto;
   font-size: 20px;
+  line-height: 24px;
 }
 
 h1 {
   font-family: "Open Sans", "Helvetica Neue", sans-serif;
   font-weight: 800;
+  letter-spacing: -3px;
   text-transform: uppercase;
   font-size: 48px;
 }
@@ -24,10 +26,18 @@ h1 {
 h1 em {
   font-weight: 400;
   text-transform: none;
+  letter-spacing: 0;
   font-family: 'Gentium Book Basic', Georgia, serif;
 }
 
-.button {
+h2 {
+  font: 32px/48px "Open Sans", "Helvetica Neue", sans-serif;
+  font-weight: 800;
+  letter-spacing: -2px;
+  text-transform: uppercase;
+}
+
+.button, input[type="submit"] {
   display: block;
   background: #fcfcfc; /* Old browsers */
   background: -moz-linear-gradient(top, #fcfcfc 0%, #ececec 100%); /* FF3.6+ */
@@ -40,12 +50,12 @@ h1 em {
   border: 1px solid #eee;
   border-radius: 4px;
   box-shadow: 0 2px #aaa;
-  padding: 0 1em;
-  line-height: 48px;
+  padding: 0 2em;
+  font: 20px/48px 'Gentium Book Basic', Georgia, serif;
   cursor: pointer;
 }
 
-.button:hover {
+.button:hover, input[type="submit"]:hover {
   background: #ffffff; /* Old browsers */
   background: -moz-linear-gradient(top, #ffffff 0%, #f0f0f0 100%); /* FF3.6+ */
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f0f0f0)); /* Chrome,Safari4+ */
@@ -61,4 +71,25 @@ h1 em {
 ul.bland {
   padding: 0;
   list-style-type: none
+}
+
+label span {
+  display: block;
+  font-style: italic;
+  margin-top: 24px;
+}
+
+input[type="text"], input[type="password"] {
+  border: 2px solid #ccc;
+  padding: 3px 6px;
+  font: 20px/24px 'Gentium Book Basic', Georgia, serif;
+}
+
+input[type="text"]:hover, input[type="password"]:hover {
+  border-color: #ddd;
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+  border-color: #8af;
+  outline: none;
 }

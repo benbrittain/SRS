@@ -5,13 +5,16 @@
 
 {% block content %}
   <h2>Login</h2>
-  <form action="" method="post">
-    <dl>
-      <dt>Login
-      <dd><input type="text" name="username">
-      <dd><input type="text" name="password">
-      <dd><input type="submit" value="login">
-    </dl>
+  <form action="/login" method="post">
+    <label>
+      <span>Username:</span>
+      <input type="text" name="username">
+    </label>
+    <label>
+      <span>Password:</span>
+      <input type="password" name="password">
+    </label>
+    <p><input type="submit" value="Login!"></p>
   </form>
 {% endblock %}
 

@@ -92,8 +92,8 @@ def show_deck(deckName):
 @login_required
 def decks_index():
     return render_template('index.html', decks = [1,3,5])
-        
+
 
 #run everything! move into an __init__.py?
 if __name__ == '__main__':
-  app.run(debug=True)
+  app.run()
