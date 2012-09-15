@@ -1,4 +1,4 @@
-import os
+import os, json
 from flask import Flask, render_template, redirect, url_for
 from flask.ext.assets import Environment, Bundle
 from flask.ext.login import (LoginManager, current_user, login_required,
@@ -58,8 +58,11 @@ def login():
     if user:
         if login_user(DbUser(user)):
 #            flash("You have logged in")
-            print(user)
-            return render_template('index.html', userId = user )
+            ustring = '['
+            for x in user.decks:
+                ustring = ustring +  "{name:\"" + x.name.encode('utf8') + "\"}"
+            ustring = ustring + ']'
+            return render_template('index.html', decks = json.JSONEncoder(ustring))
     return render_template('login.html')
 
 
