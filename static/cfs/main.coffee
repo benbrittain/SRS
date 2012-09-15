@@ -2,10 +2,10 @@ JST = {}
 JST['decks'] = thermos.template (locals) ->
   @ul '.bland', ->
     locals.decks.each (deck) =>
-      @li ".view_deck.button", "#{deck.get('name')}"
-    @li '.new_deck', ->
+      @li ".view_deck.button", "#{deck.get('name')} (#{deck.cards.length} cards)"
+    @li ->
       @input '.new_deck_input', type: 'text'
-      @div '.button', "+ Add new deck"
+      @div '.new_deck.button', "+ Add new deck"
 JST['deck'] = thermos.template (locals) ->
   @span '.faux_link.go_back', '&laquo; Go back to list of decks'
   @h2 "#{locals.deck.get('name')}"
@@ -19,12 +19,18 @@ class @Card extends Backbone.Model
 
 class @Deck extends Backbone.Model
   urlRoot: "/decks"
+  initialize: (attributes) =>
+    @cards = new Cards(attributes.cards)
 
 class @User extends Backbone.Model
   initialize: (attributes) =>
     @decks = new Decks(attributes.decks)
 
 # Collections
+class @Cards extends Backbone.Collection
+  model: Card
+  url: '/decks'
+
 class @Decks extends Backbone.Collection
   model: Deck
   url: '/decks'
@@ -36,6 +42,7 @@ class @DecksView extends Backbone.View
   events:
     'click .view_deck': 'viewDeck'
     'click .new_deck': 'createDeck'
+    'keydown .new_deck_input': 'inputDeck'
 
   initialize: =>
     @collection.on 'add remove', @render
@@ -55,11 +62,14 @@ class @DecksView extends Backbone.View
     deckView = new DeckView(el: $div, parent: this)
     deckView.render()
 
+  inputDeck: (e) =>
+    @createDeck()  if e.which == 13
+
   createDeck: =>
     token = $("meta[name='username']").attr("content")
     name = @$el.find('.new_deck_input').val()
     deck = new Deck(name: name, username: token)
-    deck.save(success: @_createDeckSuccess, error: @_createDeckError)
+    deck.save(null, success: @_createDeckSuccess, error: @_createDeckError)
 
   _createDeckSuccess: (deck) =>
     @collection.add(deck)
