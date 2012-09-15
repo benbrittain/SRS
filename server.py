@@ -63,27 +63,34 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/profile/')
-@login_required
-show_profile():
-    pass
-
 @app.route('/profile/settings')
 @login_required
-show_settings(deckName):
+def show_settings(deckName):
+    pass
+
+@app.route('/profile/')
+@login_required
+def show_profile():
+    pass
+
+#merged with below?
+@app.route('/decks/<deckName>/edit')
+@login_required
+def edit_deck(deckName):
     pass
 
 @app.route('/decks/<deckName>')
 @login_required
-show_deck(deckName):
+def show_deck(deckName):
     pass
 
-@app.route('/')
 @app.route('/decks')
+@app.route('/')
 @login_required
 def decks_index():
     return render_template('index.html', decks = [1,3,5])
         
 
+#run everything! move into an __init__.py?
 if __name__ == '__main__':
-  app.run()
+  app.run(debug=True)
