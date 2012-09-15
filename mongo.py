@@ -5,9 +5,11 @@ app = Flask(__name__)
 app.config['MONGOALCHEMY_DATABASE'] = 'library'
 db = MongoAlchemy(app)
 
-class MyCustomizedQuery(BaseQuery):
-    def check_exists(self, name):
-        return self.filter(self.type.username == name).first()
+#class MyCustomizedQuery(BaseQuery):
+#    def checkUsername(self, name):
+#        return self.filter(self.type.username == name).first()
+#    def checkPassword(self, password):
+#        return self.filter(self.type.password == password).first()
 
 #class Card(db.Document):
 #    front = db.StringField()
@@ -22,6 +24,6 @@ class User(db.Document):
     password = db.StringField()
 #    decks = db.ListField(db.DocumentField(Deck))
 
-    query_class = MyCustomizedQuery
+#    query_class = MyCustomizedQuery
 #    decks = db.DocumentField(Deck)
 

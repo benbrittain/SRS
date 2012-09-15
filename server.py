@@ -1,52 +1,61 @@
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 from flask.ext.assets import Environment, Bundle
 from flask.ext.login import (LoginManager, current_user, login_required,
-    login_user, logout_user, UserMixin, AnonymousUser,
+    login_user, logout_user, UserMixin, AnonymousUser, flash,
     confirm_login, fresh_login_required)
 from LoginForm import LoginForm
+from mongo import User
 
 app = Flask(__name__)
-app.secret_key= "why do I feel awake at 4am?"
-
-
-#TEMPORARY FOR TESTING
-class User(UserMixin):
-    def __init__(self, name, password, active=True):
-        self.name = name
-        self.password = password 
-        self.active = active
-
-    def is_active(self):
-        return self.active
-
- 
-USERS = {
-    1: User(u"Ben", "Haskell"),
-    2: User(u"David", "Ruby")
-}
-
-USER_NAMES = dict((u.name, u) for u in USERS.itervalues())
-
- 
 
 # Debugging
 app.debug = (os.environ.get('ENV', 'production') != True)
+app.secret_key= "why do I feel awake at 4am?"
+app.config.from_object(__name__)
 
-# Login
-def load_user(userid):
-    return User.get(userid)
+#login Manager setup
 
-# Routing
+login_manager = LoginManager()
+login_manager.login_view = "login"
+login_manager.login_message = u"Please log in to access this page."
+login_manager.refresh_view = "reauth"
+login_manager.setup_app(app)
+
+class DbUser(UserMixin):
+    """Wraps User object for Flask-Login"""
+    def __init__(self, user):
+        self._user = user
+
+    def get_id(self):
+        return unicode(self._user.username)
+
+    def is_anonymous(self):
+        return False
+
+    def is_authenticated(self):
+        return True
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    user = User.query.get(user_id)
+    if user:
+        return DbUser(user)
+    else:
+        return None
+
  
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():
-        flash(u'Successfully logged in as %s' % form.user.username)
-        session['user_id'] = form.user.id
-        return redirect(url_for('index'))
-    return render_template('index.html')
+    user = User.query.filter(User.username == unicode(form.username.data), User.password == unicode(form.password.data)).first()
+    if user:
+        if login_user(DbUser(user)):
+            flash("You have logged in")
+            return render_template('layout.html')
+    return render_template('login.html')
+
 
 @app.route('/')
 @app.route('/decks')

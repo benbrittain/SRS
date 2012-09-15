@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form, TextField, PasswordField, validators
-
+from mongo import User as User
 
 class LoginForm(Form):
     username = TextField('Username', [validators.Required()])
@@ -11,19 +11,13 @@ class LoginForm(Form):
 
     def validate(self):
         rv = Form.validate(self)
-        if not rv:
-            return False
-
-        user = User.query.filter_by(
-            username=self.username.data).first()
-        if user is None:
-            self.username.errors.append('Unknown username')
-            return False
-
-        if not user.check_password(self.password.data):
-            self.password.errors.append('Invalid password')
-            return False
-
-        self.user = user
-        return True
+#        if not rv:
+#            return False
+        dbUser = User.query.filter(User.username == unicode(self.username.data), User.password == unicode(self.password.data)).first()
+        if dbUser:
+            #make this HASHING IN THE FUTURE MAN! `
+            if unicode(self.username.data) == unicode(dbUser.username):
+                if unicode(self.password.data) == unicode(dbUser.password):
+                    return True
+        return False 
 
