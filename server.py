@@ -61,7 +61,7 @@ def register():
             return render_template('register.html')
         query = User(username = request.form['username'], password = request.form['password'], decks = [])
         query.save()
-        return render_template('index.html')
+        return redirect('/')
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
