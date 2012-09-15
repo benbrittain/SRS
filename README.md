@@ -7,6 +7,7 @@ Spaced Repitition
 features:
 
     high:
+        make a way to display cards
         make a way to create decks
         make a way to add card to deck
         algorithm for SRS
