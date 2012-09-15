@@ -2,7 +2,7 @@ JST = {}
 JST['decks'] = thermos.template (locals) ->
   @ul '.bland', ->
     locals.decks.each (deck) =>
-      @li ".view_deck.button", "#{deck.get('name')}"
+      @li ".view_deck.button", "#{deck.get('name')} (#{deck.cards.length} cards)"
     @li ->
       @input '.new_deck_input', type: 'text'
       @div '.new_deck.button', "+ Add new deck"
@@ -19,12 +19,18 @@ class @Card extends Backbone.Model
 
 class @Deck extends Backbone.Model
   urlRoot: "/decks"
+  initialize: (attributes) =>
+    @cards = new Cards(attributes.cards)
 
 class @User extends Backbone.Model
   initialize: (attributes) =>
     @decks = new Decks(attributes.decks)
 
 # Collections
+class @Cards extends Backbone.Collection
+  model: Card
+  url: '/decks'
+
 class @Decks extends Backbone.Collection
   model: Deck
   url: '/decks'

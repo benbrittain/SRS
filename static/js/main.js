@@ -11,7 +11,7 @@
     return this.ul('.bland', function() {
       var _this = this;
       locals.decks.each(function(deck) {
-        return _this.li(".view_deck.button", "" + (deck.get('name')));
+        return _this.li(".view_deck.button", "" + (deck.get('name')) + " (" + deck.cards.length + " cards)");
       });
       return this.li(function() {
         this.input('.new_deck_input', {
@@ -50,10 +50,15 @@
     __extends(Deck, _super);
 
     function Deck() {
+      this.initialize = __bind(this.initialize, this);
       return Deck.__super__.constructor.apply(this, arguments);
     }
 
     Deck.prototype.urlRoot = "/decks";
+
+    Deck.prototype.initialize = function(attributes) {
+      return this.cards = new Cards(attributes.cards);
+    };
 
     return Deck;
 
@@ -75,6 +80,22 @@
     return User;
 
   })(Backbone.Model);
+
+  this.Cards = (function(_super) {
+
+    __extends(Cards, _super);
+
+    function Cards() {
+      return Cards.__super__.constructor.apply(this, arguments);
+    }
+
+    Cards.prototype.model = Card;
+
+    Cards.prototype.url = '/decks';
+
+    return Cards;
+
+  })(Backbone.Collection);
 
   this.Decks = (function(_super) {
 
