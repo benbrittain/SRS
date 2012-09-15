@@ -6,6 +6,8 @@ from flask.ext.login import (LoginManager, current_user, login_required,
     confirm_login, fresh_login_required)
 from LoginForm import LoginForm, RegistrationForm
 from mongo import User, Deck
+from json import JSONEncoder
+
 
 app = Flask(__name__)
 
@@ -98,21 +100,32 @@ def show_deck(deckName):
 @app.route('/')
 @login_required
 def decks_index():
-  user = User.query.filter(User.username == current_user.get_id()).first()
-  decks = map(lambda deck: {'name': deck.name, 'cards': deck.cards}, user.decks)
-  return render_template('index.html', decks=json.dumps(decks))
+    user = User.query.filter(User.username == current_user.get_id()).first()
+    decks = map(lambda deck: {'name': deck.name, 'cards': deck.cards}, user.decks)
+    ustring = '['
+    for card in decks:
+        if len(card['cards'])> 0:
+            cardSides = "{front: \" " + card['cards'][0].front.encode('utf8') + " \", back: \" " + card['cards'][0].back.encode('utf8') + " \" }"
+        else:
+            cardSides = "{}"
+        ustring = ustring +  "{name:\"" + card['name'].encode('utf8') + "\", cards: " + cardSides +" }"
+    ustring = ustring + ']'
+        
+    
+    return render_template('index.html', decks=json.dumps(ustring))
 
 @app.route('/decks', methods=['POST'])
+@login_required
 def decks_create():
-  print request.json
-  user = User.query.filter(User.username == request.json['username']).first()
-  deck = Deck(name=request.json['name'], cards=[])
-  user.decks.append(deck)
-  if user.save():
-    return jsonify(name=deck.name, cards=[])
-  else:
-    return jsonify(success=False)
+    print request.json
+    user = User.query.filter(User.username == request.json['username']).first()
+    deck = Deck(name=request.json['name'], cards=[])
+    user.decks.append(deck)
+    if user.save():
+        return jsonify(name=deck.name, cards=[])
+    else:
+        return jsonify(success=False)
 
 #run everything! move into an __init__.py?
 if __name__ == '__main__':
-  app.run()
+    app.run()
