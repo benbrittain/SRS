@@ -86,21 +86,29 @@ def show_settings(deckName):
 def show_profile():
     pass
 
-#merged with below?
+#@app.route('/decks/<deckName>/<cardName>/delete', methods=['POST'])
+#@login_required
+#def delete_card(cardName):
+#    print request.json
+#    user = User.query.filter(User.username == current_user.get_id()).first()
+#    for deck in user.decks:
+#        if (unicode(deck.userId) == unicode(deckName)):
+#            for card in deck:
+#                if (card.uniqueId = cardId):
+#                    
+#            deck.cards.append(Card(front=request.json['front'], back=request.json['back'],interval=3,eFactor=3.0))
+#    return jsonify(success=True)
+
 @app.route('/decks/<deckName>/cards', methods=['POST'])
-@login_required
+#@login_required
 def create_card(deckName):
     print request.json
-    user = User.query.filter(User.username == current_user.get_id()).first()
+    user = User.query.filter(User.username == request.json['username']).first()
     for deck in user.decks:
         if (unicode(deck.userId) == unicode(deckName)):
-            deck.cards.append(Card(front=request.json['front'], back=request.json['back'],interval=3,eFactor=3.0))
+            deck.cards.append(Card(uniqueId = unicode(uuid.uuid1()), front=request.json['front'], back=request.json['back'],interval=3,eFactor=3.0))
+            user.save()
     return jsonify(success=True)
-
-@app.route('/decks/<deckName>')
-@login_required
-def show_deck(deckName):
-    pass
 
 @app.route('/decks')
 @app.route('/')
