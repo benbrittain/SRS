@@ -93,8 +93,9 @@ def create_card(deckName):
     print request.json
     user = User.query.filter(User.username == current_user.get_id()).first()
     for deck in user.decks:
-        if (deck.name == deckName):
-            decks.cards.append(Card(front=request.json['front'], back=request.json['back'],interval=3,eFactor=3.0))
+        if (unicode(deck.userId) == unicode(deckName)):
+            deck.cards.append(Card(front=request.json['front'], back=request.json['back'],interval=3,eFactor=3.0))
+    return jsonify(success=True)
 
 @app.route('/decks/<deckName>')
 @login_required
