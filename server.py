@@ -87,10 +87,14 @@ def show_profile():
     pass
 
 #merged with below?
-@app.route('/decks/<deckName>/edit')
+@app.route('/decks/<deckName>/cards', methods=['POST'])
 @login_required
-def edit_deck(deckName):
-    pass
+def create_card(deckName):
+    print request.json
+    user = User.query.filter(User.username == current_user.get_id()).first()
+    for deck in user.decks:
+        if (deck.name == deckName):
+            decks.cards.append(Card(front=request.json['front'], back=request.json['back'],interval=3,eFactor=3.0))
 
 @app.route('/decks/<deckName>')
 @login_required
