@@ -8,10 +8,13 @@
   JST = {};
 
   JST['decks'] = thermos.template(function(locals) {
+    this.h2("Your decks");
     return this.ul('.bland', function() {
       var _this = this;
       locals.decks.each(function(deck) {
-        return _this.li(".view_deck.button", "" + (deck.get('name')) + " (" + deck.cards.length + " cards)");
+        return _this.li(".view_deck.button", "" + (deck.get('name')) + " (" + deck.cards.length + " cards)", {
+          "data-id": deck.id
+        });
       });
       return this.li(function() {
         this.input('.new_deck_input', {
@@ -23,8 +26,10 @@
   });
 
   JST['deck'] = thermos.template(function(locals) {
-    this.span('.faux_link.go_back', '&laquo; Go back to list of decks');
-    return this.h2("" + (locals.deck.get('name')));
+    return this.h2(function() {
+      this.span('.faux_link.go_back', 'Your decks');
+      return this.text(" &raquo; " + (locals.deck.get('name')));
+    });
   });
 
   JST['card'] = thermos.template(function() {
@@ -161,11 +166,17 @@
     };
 
     DecksView.prototype.viewDeck = function(e) {
-      var $div, deckView;
-      this.$el.hide();
+      var $deck, $div, deck, deckView;
       $div = $("<div/>");
-      this.$el.append($div);
+      $div.insertAfter(this.$el);
+      this.$el.hide();
+      $deck = this.$el.find(e.target);
+      if (!$deck.hasClass('view_deck')) {
+        $deck = $deck.closest('.view_deck');
+      }
+      deck = this.collection.get($deck.data('id'));
       deckView = new DeckView({
+        model: deck,
         el: $div,
         parent: this
       });
@@ -234,7 +245,7 @@
 
     DeckView.prototype.goBack = function() {
       this.remove();
-      return this.parent.show();
+      return this.parent.$el.show();
     };
 
     return DeckView;

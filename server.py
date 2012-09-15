@@ -102,7 +102,7 @@ def show_deck(deckName):
 @login_required
 def decks_index():
     user = User.query.filter(User.username == current_user.get_id()).first()
-    decks = map(lambda deck: {'id': deck._id , "name": deck.name, 'cards': [{'front': card.front, 'back': card.back} for card in deck.cards]}, user.decks)
+    decks = map(lambda deck: {'id': deck.userId , "name": deck.name, 'cards': [{'front': card.front, 'back': card.back} for card in deck.cards]}, user.decks)
     return render_template('index.html', decks=json.dumps(decks))
 
 @app.route('/decks', methods=['POST'])
@@ -110,7 +110,7 @@ def decks_index():
 def decks_create():
     print request.json
     user = User.query.filter(User.username == request.json['username']).first()
-    deck = Deck(name=request.json['name'], userId = user._id + time.time() ,cards=[])
+    deck = Deck(name=request.json['name'], userId=str(user.mongo_id) + str(time.time()),cards=[])
     user.decks.append(deck)
     if user.save():
         return jsonify(name=deck.name, userId = name.userId, cards=[])

@@ -1,14 +1,16 @@
 JST = {}
 JST['decks'] = thermos.template (locals) ->
+  @h2 "Your decks"
   @ul '.bland', ->
     locals.decks.each (deck) =>
-      @li ".view_deck.button", "#{deck.get('name')} (#{deck.cards.length} cards)"
+      @li ".view_deck.button", "#{deck.get('name')} (#{deck.cards.length} cards)", "data-id": deck.id
     @li ->
       @input '.new_deck_input', type: 'text'
       @div '.new_deck.button', "+ Add new deck"
 JST['deck'] = thermos.template (locals) ->
-  @span '.faux_link.go_back', '&laquo; Go back to list of decks'
-  @h2 "#{locals.deck.get('name')}"
+  @h2 ->
+    @span '.faux_link.go_back', 'Your decks'
+    @text " &raquo; #{locals.deck.get('name')}"
   # TODO: Display cards
 JST['card'] = thermos.template ->
   @div
@@ -56,10 +58,13 @@ class @DecksView extends Backbone.View
     super()
 
   viewDeck: (e) =>
-    @$el.hide()
     $div = $("<div/>")
-    @$el.append($div)
-    deckView = new DeckView(el: $div, parent: this)
+    $div.insertAfter @$el
+    @$el.hide()
+    $deck = @$el.find(e.target)
+    $deck = $deck.closest('.view_deck')  unless $deck.hasClass('view_deck')
+    deck = @collection.get($deck.data('id'))
+    deckView = new DeckView(model: deck, el: $div, parent: this)
     deckView.render()
 
   inputDeck: (e) =>
@@ -95,4 +100,4 @@ class @DeckView extends Backbone.View
 
   goBack: =>
     @remove()
-    @parent.show()
+    @parent.$el.show()
