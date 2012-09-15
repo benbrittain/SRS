@@ -59,8 +59,9 @@ def register():
         if request.form['password'] != request.form['confirm_password']:
             flash("passwords do not match")
             return render_template('register.html')
-        query = User(username = request.form['username'], password = request.form['password'], decks = [])
-        query.save()
+        user = User(username = request.form['username'], password = request.form['password'], decks = [])
+        user.save()
+        login_user(DbUser(user))
         return redirect('/')
     return render_template('register.html')
 
