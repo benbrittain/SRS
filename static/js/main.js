@@ -12,20 +12,20 @@
     return this.ul('.bland', function() {
       var _this = this;
       locals.decks.each(function(deck) {
-        return _this.li(function() {
-          this.div(".view_deck.button", "" + (deck.get('name')) + " (" + deck.cards.length + " cards)", {
+        return _this.li('.clearfix', function() {
+          this.div(".view_deck.button.left.round_left", "" + (deck.get('name')) + " (" + deck.cards.length + " cards)", {
             "data-id": deck.id
           });
-          return this.div(".edit_deck.button", {
+          return this.div(".edit_deck.button.edit.left.round_right", {
             "data-id": deck.id
           }, "Edit");
         });
       });
-      return this.li(function() {
-        this.input('.new_deck_input', {
+      return this.li('.clearfix', function() {
+        this.input('.new_deck_input.round_left', {
           type: 'text'
         });
-        return this.div('.new_deck.button', "+ Add new deck");
+        return this.div('.new_deck.button.action.left.round_right', "Create deck");
       });
     });
   });

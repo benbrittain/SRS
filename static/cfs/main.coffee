@@ -3,12 +3,12 @@ JST['decks'] = thermos.template (locals) ->
   @h2 "Your decks"
   @ul '.bland', ->
     locals.decks.each (deck) =>
-      @li ->
-        @div ".view_deck.button", "#{deck.get('name')} (#{deck.cards.length} cards)", "data-id": deck.id
-        @div ".edit_deck.button", "data-id": deck.id, "Edit"
-    @li ->
-      @input '.new_deck_input', type: 'text'
-      @div '.new_deck.button', "+ Add new deck"
+      @li '.clearfix', ->
+        @div ".view_deck.button.left.round_left", "#{deck.get('name')} (#{deck.cards.length} cards)", "data-id": deck.id
+        @div ".edit_deck.button.edit.left.round_right", "data-id": deck.id, "Edit"
+    @li '.clearfix', ->
+      @input '.new_deck_input.round_left', type: 'text'
+      @div '.new_deck.button.action.left.round_right', "Create deck"
 JST['deck'] = thermos.template (locals) ->
   @h2 ->
     @span '.faux_link.go_back', 'Your decks'
