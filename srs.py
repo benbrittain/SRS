@@ -6,45 +6,52 @@ def makeCard(frontVar, backVar):
             front = frontVar,
             back = backVar,
             interval = 0,
+            repetition = 0,
             eFactor = 2.5,
             status = "",
             lastDone = datetime.datetime.now(),
             isDue = False)
     return card
 
-def get_card(deck):
-    activeReview = []
-    for card in deck:
-        if (datetime.datetime.now() - card.lastDone) < card.interval:
-            print "got card from due section"
-            activeReview.append(card)
+def generateCards(deck):
+#    activeReview = []
+#    for card in deck:
+#        if (datetime.datetime.now() - card.lastDone) < card.interval:
+#            print "got card from due section"
+#            activeReview.append(card)
+#    return activeReview
+#
+#    allNew = []
+#    for card in deck:
+#        if card.status == "new":
+#            print "got card from new section"
+#            return card
+#
+#    for card in deck:
+#        if size(allNew) >= 10:
+#            break
+#        else:
+#            print "allNew! broken out of making pending new"
+#            if card.status == "pending":
+#                card.status = "new"
+#
+#    pendingDeck = []
+#    for card in deck:
+#        if card.status == "pending":
+#            print "got card from pending section!"
+#            if pendingDeck > 10:
+#                break
+#            pendingDeck.append(card)
+#            return card
+    x = 0
+    cardList = list()
+    while x < 10:
+        cardList.append(deck[x])
+        x = x + 1
+    return cardList
 
-    allNew = []
-    for card in deck:
-        if card.status == "new":
-            print "got card from new section"
-            return card
-
-    for card in deck:
-        if size(allNew) >= 10:
-            break
-        else:
-            print "allNew! broken out of making pending new"
-            if card.status == "pending":
-                card.status = "new"
-
-    pendingDeck = []
-    for card in deck:
-        if card.status == "pending":
-            print "got card from pending section!"
-            if pendingDeck > 10:
-                break
-            pendingDeck.append(card)
-            return card
-    for card in deck:
-        if card.status == "new":
-            print "got card from new section"
-            return card
+#            print "got card from new section"
+#            return card
 
 #    maxQuality = 5
 #qualitySubtractor = 5

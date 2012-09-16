@@ -13,6 +13,7 @@ class Card(db.Document):
     uniqueId = db.StringField()
     #used for calculating the SRS numbers
 
+    repetition = db.IntField()
     interval = db.IntField()
     lastDone = db.DateTimeField()
     eFactor = db.FloatField()

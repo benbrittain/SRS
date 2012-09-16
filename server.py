@@ -1,5 +1,5 @@
-import os, json, time
-from flask import Flask, render_template, redirect, url_for, request, jsonify
+import os, json, time, math, datetime
+from flask import Flask, render_template, redirect, url_for, request, jsonify,session
 from flask.ext.assets import Environment, Bundle
 from flask.ext.login import (LoginManager, current_user, login_required,
     login_user, logout_user, UserMixin, AnonymousUser, flash,
@@ -56,8 +56,57 @@ def initSRS(deckName):
     for deck in user.decks:
         if (unicode(deck.userId) == unicode(deckName)):
             for card in deck.cards:
-                #SRS
+                #setup session
+                session[deck.userId] = [0,0,0,0]
                 return jsonify(id=card.uniqueId,front=card.front,back=card.back)
+    return jsonify(success=False)
+
+def scoreCard(username, deckName, cardName, score, user):
+    for deck in user.decks:
+        if (unicode(deck.userId) == unicode(deckName)):
+            for card in deck.cards:
+                if card.uniqueId == cardName:
+                    if score < 3 :
+                        card.eFactor = 0
+                        card.interval = 0
+                    else:
+                        card.eFactor = float(card.eFactor) - 0.8 + (0.28*float(score)) - (0.02*float(score)*float(score))
+                        if card.eFactor < 1.3:
+                            card.eFactor = 1.3
+                interval = 1
+                if card.eFactor < 3:
+                    card.repetition = 1
+                if card.repetition == 1:
+                    card.interval =1 
+                elif card.repetition == 2:
+                    card.interval = 6
+                elif card.repetition > 2:
+                    card.interval = math.round(card.interval*card.eFactor)
+                card.lastDone = datetime.datetime.now()
+                print card.eFactor
+                print card.interval
+                user.save()
+            
+            
+
+@app.route('/decks/<deckName>/score', methods=['POST'])
+def scoreSRS(deckName):
+    username = request.form['username']
+    deckName = deckName
+    cardName = request.form['uniqueId']
+    score = request.form['score']
+    user = User.query.filter(User.username == unicode(request.form['username'])).first()
+
+
+    scoreCard(username, deckName, cardName, score, user)
+
+
+    for deck in user.decks:
+        if (unicode(deck.userId) == unicode(deckName)):
+            for card in deck.cards:
+                newCard = grabNextCard(decks.cards);
+                return jsonify(id=newCard.uniqueId,front=newCard.front,back=newBack)
+#                return jsonify(id=card.uniqueId,front=card.front,back=card.back)
     return jsonify(success=False)
 
 
