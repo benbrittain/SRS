@@ -3,20 +3,28 @@
 {% block title %}Register — {% endblock %}
 
 {% block content %}
-  <p>Spaced-repetition software that's easy to use.</p>
-  <form action="/register" method="post">
-    <label>
-      <span>Username:</span>
-      <input type="text" name="username">
-    </label>
-    <label>
-      <span>Password:</span>
-      <input type="password" name="password">
-    </label>
-    <label>
-      <span>Confirm password:</span>
-      <input type="password" name="confirm_password">
-    </label>
-    <p><input type="submit" value="Sign up!"></p>
-  </form>
+  <div class="half_width left main_screen">
+    <p><strong>Memorize your notes with ease.</strong></p>
+    <p>Aquamentis gives the power of spaced repetition into your hands. Spaced repetition is a way of learning based on the idea that you retain information much better if you review concepts <em>right before</em> you forget them.</p>
+    <p>The time before you forget something is an exponential function, the <a href="http://en.wikipedia.org/wiki/Forgetting_curve">Ebbinghaus forgetting curve</a>.</p>
+  </div>
+  <div class="half_width right">
+    <div class="register_box">
+      <form action="/register" method="post">
+        <label>
+          <span>Username:</span>
+          <input type="text" name="username">
+        </label>
+        <label>
+          <span>Password:</span>
+          <input type="password" name="password">
+        </label>
+        <label>
+          <span>Confirm password:</span>
+          <input type="password" name="confirm_password">
+        </label>
+        <p><input class="action block full_width" type="submit" value="Sign up!"></p>
+      </form>
+    </div>
+  </div>
 {% endblock %}

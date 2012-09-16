@@ -198,3 +198,6 @@ class @EditDeckView extends Backbone.View
   deleteDeck: =>
     @model.destroy()
     @goBack()
+
+$ ->
+  $('input').first().focus()

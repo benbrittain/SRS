@@ -1,7 +1,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  font: 100% "Helvetica Neue", sans-serif;
+  font: 100% "Open Sans", "Helvetica Neue", sans-serif;
   color: #333;
 }
 
@@ -117,7 +117,7 @@ a:hover, .faux_link:hover {
   border-left-color: #b9babb;
 }
 
-.button.action, a.button.action {
+.button.action, input[type="submit"].action, a.button.action {
   background: #fc9d80; /* Old browsers */
   background: -moz-linear-gradient(top, #fc9d80 0%, #e02c1f 100%); /* FF3.6+ */
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fc9d80), color-stop(100%,#e02c1f)); /* Chrome,Safari4+ */
@@ -132,7 +132,7 @@ a:hover, .faux_link:hover {
   box-shadow: 0 2px #960000;
 }
 
-.button.action:hover, a.button.action:hover {
+.button.action:hover, input[type="submit"].action:hover, a.button.action:hover {
   background: #fcb19a; /* Old browsers */
   background: -moz-linear-gradient(top, #fcb19a 0%, #e6554a 100%); /* FF3.6+ */
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcb19a), color-stop(100%,#e6554a)); /* Chrome,Safari4+ */
@@ -165,8 +165,10 @@ ul.bland {
 
 label span {
   display: block;
-  font-style: italic;
   margin-top: 24px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 input[type="text"], input[type="password"], textarea {
@@ -282,4 +284,23 @@ textarea {
 ::-moz-selection {
   background: #FF6600; /* Firefox */
   text-shadow: none;
+}
+
+.main_screen p {
+}
+
+.register_box {
+  margin-left: 24px;
+  border-radius: 24px;
+  background: rgba(0, 0, 0, .1);
+  float: left;
+  padding: 24px;
+}
+
+.block {
+  display: block;
+}
+
+.full_width {
+  width: 100%;
 }

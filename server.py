@@ -95,7 +95,7 @@ def show_profile():
 #        if (unicode(deck.userId) == unicode(deckName)):
 #            for card in deck:
 #                if (card.uniqueId = cardId):
-#                    
+#
 #            deck.cards.append(Card(front=request.json['front'], back=request.json['back'],interval=3,eFactor=3.0))
 #    return jsonify(success=True)
 
@@ -111,12 +111,18 @@ def create_card(deckName):
     return jsonify(success=True)
 
 @app.route('/decks')
-@app.route('/')
 @login_required
 def decks_index():
     user = User.query.filter(User.username == current_user.get_id()).first()
     decks = map(lambda deck: {'id': deck.userId , "name": deck.name, 'cards': [{'front': card.front, 'back': card.back} for card in deck.cards]}, user.decks)
     return render_template('index.html', decks=json.dumps(decks))
+
+@app.route('/')
+def homepage():
+    if current_user.is_authenticated():
+        return redirect(url_for('decks'))
+    else:
+        return redirect(url_for('register'))
 
 @app.route('/decks', methods=['POST'])
 @login_required

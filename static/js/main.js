@@ -464,4 +464,8 @@
 
   })(Backbone.View);
 
+  $(function() {
+    return $('input').first().focus();
+  });
+
 }).call(this);
