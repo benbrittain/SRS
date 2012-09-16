@@ -8,6 +8,7 @@ from LoginForm import LoginForm
 from mongo import User, Deck, Card
 from json import JSONEncoder
 import uuid
+import srs
 
 app = Flask(__name__)
 
@@ -48,6 +49,17 @@ def load_user(user_id):
 #################
 # Routing stuff #
 #################
+
+@app.route('/decks/<deckName>/start', methods=['GET'])
+def initSRS(deckName):
+    user = User.query.filter(User.username == request.args.get('username')).first()
+    for deck in user.decks:
+        if (unicode(deck.userId) == unicode(deckName)):
+            for card in deck.cards:
+                #SRS
+                return jsonify(id=card.uniqueId,front=card.front,back=card.back)
+    return jsonify(success=False)
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -100,13 +112,13 @@ def show_profile():
 #    return jsonify(success=True)
 
 @app.route('/decks/<deckName>/cards', methods=['POST'])
-#@login_required
+@login_required
 def create_card(deckName):
     print request.json
     user = User.query.filter(User.username == request.json['username']).first()
     for deck in user.decks:
         if (unicode(deck.userId) == unicode(deckName)):
-            deck.cards.append(Card(uniqueId = unicode(uuid.uuid1()), front=request.json['front'], back=request.json['back'],interval=3,eFactor=3.0))
+            deck.cards.append(srs.makeCard(request.json['front'],request.json['back']))
             user.save()
     return jsonify(success=True)
 
@@ -120,7 +132,7 @@ def decks_index():
 @app.route('/')
 def homepage():
     if current_user.is_authenticated():
-        return redirect(url_for('decks'))
+        return redirect(url_for('decks_index'))
     else:
         return redirect(url_for('register'))
 

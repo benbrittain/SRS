@@ -10,9 +10,15 @@ class Card(db.Document):
     front = db.StringField()
     back = db.StringField()
 
+    uniqueId = db.StringField()
     #used for calculating the SRS numbers
+
     interval = db.IntField()
+    lastDone = db.DateTimeField()
     eFactor = db.FloatField()
+    status = db.StringField()
+    isDue = db.BoolField()
+
 
 class Deck(db.Document):
     name = db.StringField()
