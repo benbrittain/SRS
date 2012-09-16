@@ -195,6 +195,7 @@ class @EditDeckView extends Backbone.View
   goBack: =>
     @remove()
     @parent.$el.show()
+    @parent.render()
 
   remove: =>
     @model.cards.off 'add remove', @render
@@ -205,7 +206,7 @@ class @EditDeckView extends Backbone.View
     back = @$('.add_card_sides textarea.right').val()
     # TODO: Don't do this.
     username = $("meta[name='username']").attr("content")
-    @model.cards.create({front, back, username})
+    @model.cards.create({front, back, username}, wait: true)
 
   deleteDeck: =>
     @model.destroy()

@@ -116,11 +116,13 @@ def show_profile():
 def create_card(deckName):
     print request.json
     user = User.query.filter(User.username == request.json['username']).first()
+    card = None
     for deck in user.decks:
         if (unicode(deck.userId) == unicode(deckName)):
-            deck.cards.append(srs.makeCard(request.json['front'],request.json['back']))
+            card = srs.makeCard(request.json['front'],request.json['back'])
+            deck.cards.append(card)
             user.save()
-    return jsonify(success=True)
+    return jsonify(id=card.uniqueId, front=card.front, back=card.back)
 
 @app.route('/decks')
 @login_required

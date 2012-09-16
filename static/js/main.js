@@ -469,7 +469,8 @@
 
     EditDeckView.prototype.goBack = function() {
       this.remove();
-      return this.parent.$el.show();
+      this.parent.$el.show();
+      return this.parent.render();
     };
 
     EditDeckView.prototype.remove = function() {
@@ -486,6 +487,8 @@
         front: front,
         back: back,
         username: username
+      }, {
+        wait: true
       });
     };
 
