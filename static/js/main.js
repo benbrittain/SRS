@@ -13,10 +13,12 @@
       var _this = this;
       locals.decks.each(function(deck) {
         return _this.li('.clearfix', function() {
-          this.div(".view_deck.button.left.round_left", "" + (deck.get('name')) + " (" + deck.cards.length + ")", {
+          this.a(".view_deck.button.left.round_left", "" + (deck.get('name')) + " (" + deck.cards.length + ")", {
+            href: 'javascript:void(0);',
             "data-id": deck.id
           });
-          return this.div(".edit_deck.button.edit.left.round_right", {
+          return this.a(".edit_deck.button.small.left.round_right", {
+            href: 'javascript:void(0);',
             "data-id": deck.id
           }, "Edit");
         });
@@ -26,14 +28,20 @@
           type: 'text',
           placeholder: 'Data Communications and Networks I'
         });
-        return this.div('.new_deck.button.action.left.round_right', "Create deck");
+        return this.a('.new_deck.button.action.left.round_right', {
+          href: 'javascript:void(0);'
+        }, function() {
+          return "Create deck";
+        });
       });
     });
   });
 
   JST['deck'] = thermos.template(function(locals) {
     this.h2(function() {
-      this.span('.faux_link.go_back', 'Your decks');
+      this.a('.go_back', {
+        href: "javascript:void(0);"
+      }, 'Your decks');
       return this.text(" &raquo; " + (locals.deck.get('name')));
     });
     return this.div(function() {
@@ -66,19 +74,42 @@
   JST['edit_deck'] = thermos.template(function(locals) {
     var _this = this;
     this.h2(function() {
-      this.span('.faux_link.go_back', 'Your decks');
+      this.a('.go_back', {
+        href: "javascript:void(0);"
+      }, 'Your decks');
       return this.text(" &raquo; Edit " + (locals.deck.get('name')));
     });
     this.div('.add_card_sides', function() {
-      return JST['edit_card']();
+      this.div('.clearfix', function() {
+        this.div('.half_width.left.card_loc', 'Front');
+        return this.div('.half_width.right.card_loc', 'Back');
+      });
+      return this.div(function() {
+        return JST['edit_card']();
+      });
     });
-    this.div('.add_card.button', function() {
-      return "+ Save card";
+    this.a('.add_card.button.action.round_bottom.right', {
+      href: 'javascript:void(0);'
+    }, function() {
+      return "Create card";
     });
     return locals.deck.cards.each(function(card) {
-      return _this.div(function() {
-        return JST['edit_card']({
-          card: card
+      return _this.div('.card.clearfix', function() {
+        this.div('.left.round_left', function() {
+          this.div('.card_loc', function() {
+            return 'Front';
+          });
+          return this.p(function() {
+            return card.get('front');
+          });
+        });
+        return this.div('.right.round_right', function() {
+          this.div('.card_loc', function() {
+            return 'Back';
+          });
+          return this.p(function() {
+            return card.get('back');
+          });
         });
       });
     });
@@ -88,14 +119,19 @@
     var card;
     card = locals.card;
     return this.div('.card.clearfix', function() {
-      this.textarea('.left', {
+      var klass;
+      klass = "";
+      if (card == null) {
+        klass = ".small";
+      }
+      this.textarea(".left" + klass, {
         placeholder: "What is the capital of France?"
       }, function() {
         if (card != null) {
           return card.get('front');
         }
       });
-      return this.textarea('.right', {
+      return this.textarea(".right" + klass, {
         placeholder: "Paris"
       }, function() {
         if (card != null) {
@@ -346,7 +382,11 @@
     __extends(EditDeckView, _super);
 
     function EditDeckView() {
+      this.deleteDeck = __bind(this.deleteDeck, this);
+
       this.createCard = __bind(this.createCard, this);
+
+      this.remove = __bind(this.remove, this);
 
       this.goBack = __bind(this.goBack, this);
 
@@ -360,25 +400,30 @@
 
     EditDeckView.prototype.events = {
       'click .go_back': 'goBack',
-      'click .add_card': 'createCard'
+      'click .add_card': 'createCard',
+      'click .delete_deck': 'deleteDeck'
     };
 
     EditDeckView.prototype.initialize = function(options) {
-      this.parent = options.parent;
-      return this.index = 0;
+      return this.parent = options.parent, options;
     };
 
     EditDeckView.prototype.render = function() {
       this.$el.html(this.template({
-        deck: this.model,
-        index: this.index
+        deck: this.model
       }));
+      this.model.cards.on('add remove', this.render);
       return this;
     };
 
     EditDeckView.prototype.goBack = function() {
       this.remove();
       return this.parent.$el.show();
+    };
+
+    EditDeckView.prototype.remove = function() {
+      this.model.cards.off('add remove', this.render);
+      return EditDeckView.__super__.remove.call(this);
     };
 
     EditDeckView.prototype.createCard = function() {
@@ -391,6 +436,11 @@
         back: back,
         username: username
       });
+    };
+
+    EditDeckView.prototype.deleteDeck = function() {
+      this.model.destroy();
+      return this.goBack();
     };
 
     return EditDeckView;

@@ -4,14 +4,15 @@ JST['decks'] = thermos.template (locals) ->
   @ul '.bland', ->
     locals.decks.each (deck) =>
       @li '.clearfix', ->
-        @div ".view_deck.button.left.round_left", "#{deck.get('name')} (#{deck.cards.length})", "data-id": deck.id
-        @div ".edit_deck.button.edit.left.round_right", "data-id": deck.id, "Edit"
+        @a ".view_deck.button.left.round_left", "#{deck.get('name')} (#{deck.cards.length})", href: 'javascript:void(0);', "data-id": deck.id
+        @a ".edit_deck.button.small.left.round_right", href: 'javascript:void(0);', "data-id": deck.id, "Edit"
     @li '.clearfix', ->
       @input '.new_deck_input.round_left', type: 'text', placeholder: 'Data Communications and Networks I'
-      @div '.new_deck.button.action.left.round_right', "Create deck"
+      @a '.new_deck.button.action.left.round_right', href: 'javascript:void(0);', -> "Create deck"
+
 JST['deck'] = thermos.template (locals) ->
   @h2 ->
-    @span '.faux_link.go_back', 'Your decks'
+    @a '.go_back', href: "javascript:void(0);", 'Your decks'
     @text " &raquo; #{locals.deck.get('name')}"
   @div ->
     JST['card'](card: locals.deck.cards.at(locals.index))
@@ -27,18 +28,30 @@ JST['card'] = thermos.template (locals) ->
 
 JST['edit_deck'] = thermos.template (locals) ->
   @h2 ->
-    @span '.faux_link.go_back', 'Your decks'
+    @a '.go_back', href: "javascript:void(0);", 'Your decks'
     @text " &raquo; Edit #{locals.deck.get('name')}"
-  @div '.add_card_sides', -> JST['edit_card']()
-  @div '.add_card.button', -> "+ Save card"
+  @div '.add_card_sides', ->
+    @div '.clearfix', ->
+      @div '.half_width.left.card_loc', 'Front'
+      @div '.half_width.right.card_loc', 'Back'
+    @div -> JST['edit_card']()
+  @a '.add_card.button.action.round_bottom.right', href: 'javascript:void(0);', -> "Create card"
   locals.deck.cards.each (card) =>
-    @div -> JST['edit_card'](card: card)
+    @div '.card.clearfix', ->
+      @div '.left.round_left', ->
+        @div '.card_loc', -> 'Front'
+        @p -> card.get('front')
+      @div '.right.round_right', ->
+        @div '.card_loc', -> 'Back'
+        @p -> card.get('back')
 
 JST['edit_card'] = thermos.template (locals) ->
   card = locals.card
   @div '.card.clearfix', ->
-    @textarea '.left', placeholder: "What is the capital of France?", -> card.get('front')  if card?
-    @textarea '.right', placeholder: "Paris", -> card.get('back')  if card?
+    klass = ""
+    klass =  ".small"  unless card?
+    @textarea ".left#{klass}", placeholder: "What is the capital of France?", -> card.get('front')  if card?
+    @textarea ".right#{klass}", placeholder: "Paris", -> card.get('back')  if card?
 
 # Models
 class @Card extends Backbone.Model
@@ -145,21 +158,26 @@ class @EditDeckView extends Backbone.View
   events:
     'click .go_back': 'goBack'
     'click .add_card': 'createCard'
+    'click .delete_deck': 'deleteDeck'
     # TODO: Editing a card
     # TODO: Adding a card
     # TODO: Removing a card
 
   initialize: (options) =>
     {@parent} = options
-    @index = 0
 
   render: =>
-    @$el.html @template(deck: @model, index: @index)
+    @$el.html @template(deck: @model)
+    @model.cards.on 'add remove', @render
     this
 
   goBack: =>
     @remove()
     @parent.$el.show()
+
+  remove: =>
+    @model.cards.off 'add remove', @render
+    super()
 
   createCard: =>
     front = @$('.add_card_sides .left').val()
@@ -167,3 +185,7 @@ class @EditDeckView extends Backbone.View
     # TODO: Don't do this.
     username = $("meta[name='username']").attr("content")
     @model.cards.create({front, back, username})
+
+  deleteDeck: =>
+    @model.destroy()
+    @goBack()

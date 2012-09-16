@@ -5,6 +5,10 @@ html, body {
   color: #333;
 }
 
+html {
+  background: #FAF9F5 url(images/bg.png);
+}
+
 body {
   width: 80%;
   min-width: 600px;
@@ -24,21 +28,31 @@ h1 {
 }
 
 h1 em {
-  font-weight: 400;
-  text-transform: none;
+  font-weight: 300;
   letter-spacing: 0;
   font-style: normal;
-  font-family: "Helvetica Neue", sans-serif;
 }
 
 h2 {
   font: 32px/48px "Open Sans", "Helvetica Neue", sans-serif;
-  font-weight: 800;
+  font-weight: 400;
   letter-spacing: -2px;
-  text-transform: uppercase;
+  margin-bottom: 0;
 }
 
-.button, input[type="submit"] {
+a, .faux_link {
+  color: #7ac;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a:hover, .faux_link:hover {
+  text-decoration: underline;
+}
+
+.button, input[type="submit"], a.button {
+  text-decoration: none;
+  color: #333;
   display: block;
   background: #fcfcfc; /* Old browsers */
   background: -moz-linear-gradient(top, #fcfcfc 0%, #e0e0e0 100%); /* FF3.6+ */
@@ -55,10 +69,10 @@ h2 {
   padding: 0 24px;
   font: 20px/48px "Helvetica Neue", sans-serif;
   cursor: pointer;
-  margin: 24px 0;
+  margin: 12px 0;
 }
 
-.button:hover, input[type="submit"]:hover {
+.button:hover, input[type="submit"]:hover, a.button:hover {
   background: #ffffff; /* Old browsers */
   background: -moz-linear-gradient(top, #ffffff 0%, #E8EBED 100%); /* FF3.6+ */
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#E8EBED)); /* Chrome,Safari4+ */
@@ -70,25 +84,30 @@ h2 {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#E8EBED',GradientType=0 ); /* IE6-9 */
   box-shadow: 0 2px #b9babb;
   color: #707376;
+  text-decoration: none;
 }
 
-.round_none {
+.round_none, a.round_none {
   border-radius: 0;
   border-right-color: #fcfcfc;
   border-left-color: #b9babb;
 }
 
-.round_left {
+.round_left, a.round_left {
   border-radius: 4px 0 0 4px;
   border-right-color: #fcfcfc;
 }
 
-.round_right {
+.round_right, a.round_right {
   border-radius: 0 4px 4px 0;
   border-left-color: #b9babb;
 }
 
-.button.edit {
+.round_bottom, a.round_bottom {
+  border-radius: 0 0 4px 4px;
+}
+
+.button.small {
   box-sizing: border-box;
   font-size: 12px;
   line-height: 48px;
@@ -98,7 +117,7 @@ h2 {
   border-left-color: #b9babb;
 }
 
-.button.action {
+.button.action, a.button.action {
   background: #fc9d80; /* Old browsers */
   background: -moz-linear-gradient(top, #fc9d80 0%, #e02c1f 100%); /* FF3.6+ */
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fc9d80), color-stop(100%,#e02c1f)); /* Chrome,Safari4+ */
@@ -113,7 +132,7 @@ h2 {
   box-shadow: 0 2px #960000;
 }
 
-.button.action:hover {
+.button.action:hover, a.button.action:hover {
   background: #fcb19a; /* Old browsers */
   background: -moz-linear-gradient(top, #fcb19a 0%, #e6554a 100%); /* FF3.6+ */
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcb19a), color-stop(100%,#e6554a)); /* Chrome,Safari4+ */
@@ -128,7 +147,7 @@ input[type="text"].new_deck_input, input[type="password"].new_deck_input {
   min-width: 400px;
   height: 48px;
   float: left;
-  margin: 24px 0;
+  margin: 12px 0;
   padding-top: 0;
   padding-bottom: 0;
   box-shadow: 0 2px 0 #999;
@@ -165,13 +184,22 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
   outline: none;
 }
 
-.faux_link {
-  color: #7ac;
-  cursor: pointer;
+.card textarea.small {
+  height: 150px;
 }
 
-.faux_link:hover {
-  text-decoration: underline;
+.add_card_sides .card {
+  margin: 0;
+}
+
+.add_card_sides .card textarea.left {
+  border-radius: 4px 0 0 0;
+  padding: 48px;
+}
+
+.add_card_sides .card textarea.right {
+  border-radius: 0 4px 0 0;
+  padding: 48px;
 }
 
 .sidebar {
@@ -190,6 +218,26 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
   float: right;
 }
 
+.card {
+  margin: 48px 0;
+}
+
+.card_loc {
+  font-size: 12px;
+  line-height: 48px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.card .card_loc {
+  border-bottom: 1px solid #ccc;
+}
+
+.half_width {
+  width: 50%;
+}
+
 .card .left, .card .right {
   width: 50%;
   border: 1px solid #ccc;
@@ -197,12 +245,17 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
   font-size: 24px;
   height: 300px;
   box-sizing: border-box;
+  padding: 0 24px;
+  background: #fff;
 }
 
 .card .right {
   border-left: none;
 }
 
+.card p {
+  margin: 24px 0;
+}
 .clearfix:before,
 .clearfix:after {
     content: " "; /* 1 */
@@ -215,4 +268,18 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 
 .clearfix {
     *zoom: 1;
+}
+
+textarea {
+  resize: none;
+}
+
+::selection {
+  background: #FF6600; /* Safari */
+  text-shadow: none;
+}
+
+::-moz-selection {
+  background: #FF6600; /* Firefox */
+  text-shadow: none;
 }

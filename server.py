@@ -121,12 +121,11 @@ def decks_index():
 @app.route('/decks', methods=['POST'])
 @login_required
 def decks_create():
-    print request.json
     user = User.query.filter(User.username == request.json['username']).first()
-    deck = Deck(name=request.json['name'], userId=uuid.uuid1(), cards=[])
+    deck = Deck(name=request.json['name'], userId=str(uuid.uuid1()), cards=[])
     user.decks.append(deck)
     if user.save():
-        return jsonify(name=deck.name, userId = name.userId, cards=[])
+        return jsonify(name=deck.name, userId=name.userId, cards=[])
     else:
         return jsonify(success=False)
 
