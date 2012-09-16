@@ -99,10 +99,12 @@
         return JST['edit_card']();
       });
     });
-    this.a('.add_card.button.action.round_bottom.right', {
-      href: 'javascript:void(0);'
-    }, function() {
-      return "Create card";
+    this.div('.clearfix', function() {
+      return this.a('.add_card.button.action.round_bottom.right', {
+        href: 'javascript:void(0);'
+      }, function() {
+        return "Create card";
+      });
     });
     return locals.deck.cards.each(function(card) {
       return _this.div('.card.clearfix', function() {
