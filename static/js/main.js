@@ -13,7 +13,7 @@
       var _this = this;
       locals.decks.each(function(deck) {
         return _this.li('.clearfix', function() {
-          this.div(".view_deck.button.left.round_left", "" + (deck.get('name')) + " (" + deck.cards.length + " cards)", {
+          this.div(".view_deck.button.left.round_left", "" + (deck.get('name')) + " (" + deck.cards.length + ")", {
             "data-id": deck.id
           });
           return this.div(".edit_deck.button.edit.left.round_right", {
@@ -23,7 +23,8 @@
       });
       return this.li('.clearfix', function() {
         this.input('.new_deck_input.round_left', {
-          type: 'text'
+          type: 'text',
+          placeholder: 'Data Communications and Networks I'
         });
         return this.div('.new_deck.button.action.left.round_right', "Create deck");
       });
