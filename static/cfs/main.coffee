@@ -20,7 +20,8 @@ JST['deck'] = thermos.template (locals) ->
 JST['card'] = thermos.template (locals) ->
   @div '.card', ->
     locals.card.get('front')
-  @div '.buttons.clearfix', ->
+  @textarea '.answer', placeholder: 'Type your answer here'
+  @div '.buttons.clearfix.hidden', ->
     @div '.button.left.hr10', "data-value": "1", -> "1"
     @div '.button.left.hr10', "data-value": "2", -> "2"
     @div '.button.left.hr10', "data-value": "3", -> "3"
@@ -138,6 +139,7 @@ class @DeckView extends Backbone.View
   events:
     'click .go_back': 'goBack'
     'click .buttons .button': 'sendScore'
+    'keydown textarea.answer': 'showAnswer'
     # TODO: Editing a card
     # TODO: Adding a card
     # TODO: Removing a card
@@ -153,6 +155,7 @@ class @DeckView extends Backbone.View
 
   render: =>
     @$el.html @template(deck: @model, index: @index)
+    @$('.answer').focus()
     this
 
   goBack: =>
@@ -167,6 +170,11 @@ class @DeckView extends Backbone.View
         @displayNext(data.id)
       else
         alert "Completed sequence. You're a winner."
+
+  showAnswer: (e) =>
+    return  if e.which != 13
+    @$('.answer').replaceWith "ANSWER: #{@model.cards.at(@index).get('back')}"
+    @$('.buttons').removeClass("hidden")
 
   displayNext: (id) =>
     card = @model.cards.get(id)

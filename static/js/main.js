@@ -55,7 +55,10 @@
     this.div('.card', function() {
       return locals.card.get('front');
     });
-    return this.div('.buttons.clearfix', function() {
+    this.textarea('.answer', {
+      placeholder: 'Type your answer here'
+    });
+    return this.div('.buttons.clearfix.hidden', function() {
       this.div('.button.left.hr10', {
         "data-value": "1"
       }, function() {
@@ -352,6 +355,8 @@
     function DeckView() {
       this.displayNext = __bind(this.displayNext, this);
 
+      this.showAnswer = __bind(this.showAnswer, this);
+
       this.sendScore = __bind(this.sendScore, this);
 
       this.goBack = __bind(this.goBack, this);
@@ -368,7 +373,8 @@
 
     DeckView.prototype.events = {
       'click .go_back': 'goBack',
-      'click .buttons .button': 'sendScore'
+      'click .buttons .button': 'sendScore',
+      'keydown textarea.answer': 'showAnswer'
     };
 
     DeckView.prototype.initialize = function(options) {
@@ -392,6 +398,7 @@
         deck: this.model,
         index: this.index
       }));
+      this.$('.answer').focus();
       return this;
     };
 
@@ -415,6 +422,14 @@
           return alert("Completed sequence. You're a winner.");
         }
       });
+    };
+
+    DeckView.prototype.showAnswer = function(e) {
+      if (e.which !== 13) {
+        return;
+      }
+      this.$('.answer').replaceWith("ANSWER: " + (this.model.cards.at(this.index).get('back')));
+      return this.$('.buttons').removeClass("hidden");
     };
 
     DeckView.prototype.displayNext = function(id) {
