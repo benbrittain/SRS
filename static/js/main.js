@@ -367,14 +367,14 @@
       var username,
         _this = this;
       username = $("meta[name='username']").attr("content");
-      return $.post("" + (this.model.url()) + "/start", {
+      return $.getJSON("" + (this.model.url()) + "/start", {
         username: username
       }, function(data) {
         var card;
         card = _this.model.cards.get(data.id);
         _this.index = _this.model.cards.indexOf(card);
         return _this.render();
-      }, 'json');
+      });
     };
 
     DeckView.prototype.render = function() {

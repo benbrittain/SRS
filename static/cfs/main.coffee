@@ -147,11 +147,10 @@ class @DeckView extends Backbone.View
 
   start: =>
     username = $("meta[name='username']").attr("content")
-    $.post "#{@model.url()}/start", {username}, (data) =>
+    $.getJSON "#{@model.url()}/start", {username}, (data) =>
       card = @model.cards.get(data.id)
       @index = @model.cards.indexOf(card)
       @render()
-    , 'json'
 
   render: =>
     @$el.html @template(deck: @model, index: @index)
