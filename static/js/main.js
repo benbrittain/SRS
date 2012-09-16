@@ -313,21 +313,22 @@
     };
 
     DecksView.prototype.createDeck = function() {
-      var deck, name, token;
-      token = $("meta[name='username']").attr("content");
-      name = this.$el.find('.new_deck_input').val();
-      deck = new Deck({
+      var name, username;
+      this.$('.new_deck_input').prop('disabled', true);
+      username = $("meta[name='username']").attr("content");
+      name = this.$('.new_deck_input').val();
+      return this.collection.create({
         name: name,
-        username: token
-      });
-      return deck.save(null, {
+        username: username
+      }, {
+        wait: true,
         success: this._createDeckSuccess,
         error: this._createDeckError
       });
     };
 
     DecksView.prototype._createDeckSuccess = function(deck) {
-      return this.collection.add(deck);
+      return this.$('.new_deck_input').prop('disabled', false);
     };
 
     DecksView.prototype._createDeckError = function() {};

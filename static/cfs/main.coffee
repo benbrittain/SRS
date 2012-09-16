@@ -119,14 +119,15 @@ class @DecksView extends Backbone.View
     @createDeck()  if e.which == 13
 
   createDeck: =>
+    @$('.new_deck_input').prop('disabled', true)
     # TODO: Don't do this.
-    token = $("meta[name='username']").attr("content")
-    name = @$el.find('.new_deck_input').val()
-    deck = new Deck(name: name, username: token)
-    deck.save(null, success: @_createDeckSuccess, error: @_createDeckError)
+    username = $("meta[name='username']").attr("content")
+    name = @$('.new_deck_input').val()
+    @collection.create({name, username}, wait: true, success: @_createDeckSuccess, error: @_createDeckError)
 
   _createDeckSuccess: (deck) =>
-    @collection.add(deck)
+    @$('.new_deck_input').prop('disabled', false)
+    # TODO: Successful flash
 
   _createDeckError: =>
     # TODO: Flash error

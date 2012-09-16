@@ -124,10 +124,8 @@ def decks_create():
     user = User.query.filter(User.username == request.json['username']).first()
     deck = Deck(name=request.json['name'], userId=str(uuid.uuid1()), cards=[])
     user.decks.append(deck)
-    if user.save():
-        return jsonify(name=deck.name, userId=name.userId, cards=[])
-    else:
-        return jsonify(success=False)
+    user.save()
+    return jsonify(name=deck.name, id=deck.userId, cards=[])
 
 @app.route("/logout")
 @login_required
