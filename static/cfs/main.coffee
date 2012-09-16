@@ -4,7 +4,7 @@ JST['decks'] = thermos.template (locals) ->
   @ul '.bland', ->
     locals.decks.each (deck) =>
       @li '.clearfix', ->
-        @div ".view_deck.button.left.round_left", "#{deck.get('name')} (#{deck.cards.length} cards)", "data-id": deck.id
+        @div ".view_deck.button.left.round_left", "#{deck.get('name')} (#{deck.cards.length})", "data-id": deck.id
         @div ".edit_deck.button.edit.left.round_right", "data-id": deck.id, "Edit"
     @li '.clearfix', ->
       @input '.new_deck_input.round_left', type: 'text'
