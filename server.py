@@ -1,6 +1,5 @@
 import os, json, time
 from flask import Flask, render_template, redirect, url_for, request, jsonify
-from flask.ext.assets import Environment, Bundle
 from flask.ext.login import (LoginManager, current_user, login_required,
     login_user, logout_user, UserMixin, AnonymousUser, flash,
     confirm_login, fresh_login_required)
