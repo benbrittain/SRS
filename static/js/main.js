@@ -68,7 +68,7 @@
       this.span('.faux_link.go_back', 'Your decks');
       return this.text(" &raquo; Edit " + (locals.deck.get('name')));
     });
-    this.div(function() {
+    this.div('.add_card_sides', function() {
       return JST['edit_card']();
     });
     this.div('.add_card.button', function() {
@@ -112,8 +112,6 @@
       return Card.__super__.constructor.apply(this, arguments);
     }
 
-    Card.prototype.urlRoot = "/cards";
-
     return Card;
 
   })(Backbone.Model);
@@ -130,7 +128,8 @@
     Deck.prototype.urlRoot = "/decks";
 
     Deck.prototype.initialize = function(attributes) {
-      return this.cards = new Cards(attributes.cards);
+      this.cards = new Cards(attributes.cards);
+      return this.cards.url = "" + (this.url()) + "/cards";
     };
 
     return Deck;
@@ -164,8 +163,6 @@
 
     Cards.prototype.model = Card;
 
-    Cards.prototype.url = '/decks';
-
     return Cards;
 
   })(Backbone.Collection);
@@ -191,8 +188,6 @@
     __extends(DecksView, _super);
 
     function DecksView() {
-      this.editDeck = __bind(this.editDeck, this);
-
       this._createDeckError = __bind(this._createDeckError, this);
 
       this._createDeckSuccess = __bind(this._createDeckSuccess, this);
@@ -200,6 +195,8 @@
       this.createDeck = __bind(this.createDeck, this);
 
       this.inputDeck = __bind(this.inputDeck, this);
+
+      this.editDeck = __bind(this.editDeck, this);
 
       this.viewDeck = __bind(this.viewDeck, this);
 
@@ -254,6 +251,24 @@
       return deckView.render();
     };
 
+    DecksView.prototype.editDeck = function(e) {
+      var $deck, $div, deck, deckView;
+      $div = $("<div/>");
+      $div.insertAfter(this.$el);
+      this.$el.hide();
+      $deck = this.$el.find(e.target);
+      if (!$deck.hasClass('edit_deck')) {
+        $deck = $deck.closest('.edit_deck');
+      }
+      deck = this.collection.get($deck.data('id'));
+      deckView = new EditDeckView({
+        model: deck,
+        el: $div,
+        parent: this
+      });
+      return deckView.render();
+    };
+
     DecksView.prototype.inputDeck = function(e) {
       if (e.which === 13) {
         return this.createDeck();
@@ -279,18 +294,6 @@
     };
 
     DecksView.prototype._createDeckError = function() {};
-
-    DecksView.prototype.editDeck = function(e) {
-      var $deck, deck;
-      $deck = this.$el.find(e.target);
-      if (!$deck.hasClass('edit_deck')) {
-        $deck = $deck.closest('.edit_deck');
-      }
-      deck = this.collection.get($deck.data('id'));
-      return this.$el.html(JST['edit_deck']({
-        deck: deck
-      }));
-    };
 
     return DecksView;
 
@@ -337,31 +340,34 @@
 
   })(Backbone.View);
 
-  this.DeckView = (function(_super) {
+  this.EditDeckView = (function(_super) {
 
-    __extends(DeckView, _super);
+    __extends(EditDeckView, _super);
 
-    function DeckView() {
+    function EditDeckView() {
+      this.createCard = __bind(this.createCard, this);
+
       this.goBack = __bind(this.goBack, this);
 
       this.render = __bind(this.render, this);
 
       this.initialize = __bind(this.initialize, this);
-      return DeckView.__super__.constructor.apply(this, arguments);
+      return EditDeckView.__super__.constructor.apply(this, arguments);
     }
 
-    DeckView.prototype.template = JST['edit_deck'];
+    EditDeckView.prototype.template = JST['edit_deck'];
 
-    DeckView.prototype.events = {
-      'click .go_back': 'goBack'
+    EditDeckView.prototype.events = {
+      'click .go_back': 'goBack',
+      'click .add_card': 'createCard'
     };
 
-    DeckView.prototype.initialize = function(options) {
+    EditDeckView.prototype.initialize = function(options) {
       this.parent = options.parent;
       return this.index = 0;
     };
 
-    DeckView.prototype.render = function() {
+    EditDeckView.prototype.render = function() {
       this.$el.html(this.template({
         deck: this.model,
         index: this.index
@@ -369,12 +375,24 @@
       return this;
     };
 
-    DeckView.prototype.goBack = function() {
+    EditDeckView.prototype.goBack = function() {
       this.remove();
       return this.parent.$el.show();
     };
 
-    return DeckView;
+    EditDeckView.prototype.createCard = function() {
+      var back, front, username;
+      front = this.$('.add_card_sides .left').val();
+      back = this.$('.add_card_sides .right').val();
+      username = $("meta[name='username']").attr("content");
+      return this.model.cards.create({
+        front: front,
+        back: back,
+        username: username
+      });
+    };
+
+    return EditDeckView;
 
   })(Backbone.View);
 

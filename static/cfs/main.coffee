@@ -29,7 +29,7 @@ JST['edit_deck'] = thermos.template (locals) ->
   @h2 ->
     @span '.faux_link.go_back', 'Your decks'
     @text " &raquo; Edit #{locals.deck.get('name')}"
-  @div ->JST['edit_card']()
+  @div '.add_card_sides', -> JST['edit_card']()
   @div '.add_card.button', -> "+ Save card"
   locals.deck.cards.each (card) =>
     @div -> JST['edit_card'](card: card)
@@ -42,12 +42,12 @@ JST['edit_card'] = thermos.template (locals) ->
 
 # Models
 class @Card extends Backbone.Model
-  urlRoot: "/cards"
 
 class @Deck extends Backbone.Model
   urlRoot: "/decks"
   initialize: (attributes) =>
     @cards = new Cards(attributes.cards)
+    @cards.url = "#{@url()}/cards"
 
 class @User extends Backbone.Model
   initialize: (attributes) =>
@@ -56,7 +56,6 @@ class @User extends Backbone.Model
 # Collections
 class @Cards extends Backbone.Collection
   model: Card
-  url: '/decks'
 
 class @Decks extends Backbone.Collection
   model: Deck
@@ -93,6 +92,16 @@ class @DecksView extends Backbone.View
     deckView = new DeckView(model: deck, el: $div, parent: this)
     deckView.render()
 
+  editDeck: (e) =>
+    $div = $("<div/>")
+    $div.insertAfter @$el
+    @$el.hide()
+    $deck = @$el.find(e.target)
+    $deck = $deck.closest('.edit_deck')  unless $deck.hasClass('edit_deck')
+    deck = @collection.get($deck.data('id'))
+    deckView = new EditDeckView(model: deck, el: $div, parent: this)
+    deckView.render()
+
   inputDeck: (e) =>
     @createDeck()  if e.which == 13
 
@@ -108,12 +117,6 @@ class @DecksView extends Backbone.View
 
   _createDeckError: =>
     # TODO: Flash error
-
-  editDeck: (e) =>
-    $deck = @$el.find(e.target)
-    $deck = $deck.closest('.edit_deck')  unless $deck.hasClass('edit_deck')
-    deck = @collection.get($deck.data('id'))
-    @$el.html JST['edit_deck'](deck: deck)
 
 class @DeckView extends Backbone.View
   template: JST['deck']
@@ -136,11 +139,12 @@ class @DeckView extends Backbone.View
     @remove()
     @parent.$el.show()
 
-class @DeckView extends Backbone.View
+class @EditDeckView extends Backbone.View
   template: JST['edit_deck']
 
   events:
     'click .go_back': 'goBack'
+    'click .add_card': 'createCard'
     # TODO: Editing a card
     # TODO: Adding a card
     # TODO: Removing a card
@@ -156,3 +160,10 @@ class @DeckView extends Backbone.View
   goBack: =>
     @remove()
     @parent.$el.show()
+
+  createCard: =>
+    front = @$('.add_card_sides .left').val()
+    back = @$('.add_card_sides .right').val()
+    # TODO: Don't do this.
+    username = $("meta[name='username']").attr("content")
+    @model.cards.create({front, back, username})
