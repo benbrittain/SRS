@@ -55,17 +55,25 @@
     this.div('.card', function() {
       return locals.card.get('front');
     });
-    return this.div('.buttons', function() {
-      this.div('.one.button', function() {
+    return this.div('.buttons.clearfix', function() {
+      this.div('.button.left.hr10', {
+        "data-value": "1"
+      }, function() {
         return "1";
       });
-      this.div('.two.button', function() {
+      this.div('.button.left.hr10', {
+        "data-value": "2"
+      }, function() {
         return "2";
       });
-      this.div('.three.button', function() {
+      this.div('.button.left.hr10', {
+        "data-value": "3"
+      }, function() {
         return "3";
       });
-      return this.div('.four.button', function() {
+      return this.div('.button.left', {
+        "data-value": "4"
+      }, function() {
         return "4";
       });
     });
@@ -342,6 +350,10 @@
     __extends(DeckView, _super);
 
     function DeckView() {
+      this.displayNext = __bind(this.displayNext, this);
+
+      this.sendScore = __bind(this.sendScore, this);
+
       this.goBack = __bind(this.goBack, this);
 
       this.render = __bind(this.render, this);
@@ -355,7 +367,8 @@
     DeckView.prototype.template = JST['deck'];
 
     DeckView.prototype.events = {
-      'click .go_back': 'goBack'
+      'click .go_back': 'goBack',
+      'click .buttons .button': 'sendScore'
     };
 
     DeckView.prototype.initialize = function(options) {
@@ -370,10 +383,7 @@
       return $.getJSON("" + (this.model.url()) + "/start", {
         username: username
       }, function(data) {
-        var card;
-        card = _this.model.cards.get(data.id);
-        _this.index = _this.model.cards.indexOf(card);
-        return _this.render();
+        return _this.displayNext(data.id);
       });
     };
 
@@ -388,6 +398,30 @@
     DeckView.prototype.goBack = function() {
       this.remove();
       return this.parent.$el.show();
+    };
+
+    DeckView.prototype.sendScore = function(e) {
+      var score, username,
+        _this = this;
+      score = parseInt($(e.target).val('value'), 10);
+      username = $("meta[name='username']").attr("content");
+      return $.post("" + (this.model.url()) + "/score", {
+        username: username,
+        score: score
+      }, function(data) {
+        if (data.id != null) {
+          return _this.displayNext(data.id);
+        } else {
+          return alert("Completed sequence. You're a winner.");
+        }
+      });
+    };
+
+    DeckView.prototype.displayNext = function(id) {
+      var card;
+      card = this.model.cards.get(id);
+      this.index = this.model.cards.indexOf(card);
+      return this.render();
     };
 
     return DeckView;

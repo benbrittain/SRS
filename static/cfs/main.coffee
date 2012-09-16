@@ -20,11 +20,11 @@ JST['deck'] = thermos.template (locals) ->
 JST['card'] = thermos.template (locals) ->
   @div '.card', ->
     locals.card.get('front')
-  @div '.buttons', ->
-    @div '.one.button', -> "1"
-    @div '.two.button', -> "2"
-    @div '.three.button', -> "3"
-    @div '.four.button', -> "4"
+  @div '.buttons.clearfix', ->
+    @div '.button.left.hr10', "data-value": "1", -> "1"
+    @div '.button.left.hr10', "data-value": "2", -> "2"
+    @div '.button.left.hr10', "data-value": "3", -> "3"
+    @div '.button.left', "data-value": "4", -> "4"
 
 JST['edit_deck'] = thermos.template (locals) ->
   @h2 ->
@@ -137,6 +137,7 @@ class @DeckView extends Backbone.View
 
   events:
     'click .go_back': 'goBack'
+    'click .buttons .button': 'sendScore'
     # TODO: Editing a card
     # TODO: Adding a card
     # TODO: Removing a card
@@ -148,9 +149,7 @@ class @DeckView extends Backbone.View
   start: =>
     username = $("meta[name='username']").attr("content")
     $.getJSON "#{@model.url()}/start", {username}, (data) =>
-      card = @model.cards.get(data.id)
-      @index = @model.cards.indexOf(card)
-      @render()
+      @displayNext(data.id)
 
   render: =>
     @$el.html @template(deck: @model, index: @index)
@@ -159,6 +158,20 @@ class @DeckView extends Backbone.View
   goBack: =>
     @remove()
     @parent.$el.show()
+
+  sendScore: (e) =>
+    score = parseInt($(e.target).val('value'), 10)
+    username = $("meta[name='username']").attr("content")
+    $.post "#{@model.url()}/score", {username, score}, (data) =>
+      if data.id?
+        @displayNext(data.id)
+      else
+        alert "Completed sequence. You're a winner."
+
+  displayNext: (id) =>
+    card = @model.cards.get(id)
+    @index = @model.cards.indexOf(card)
+    @render()
 
 class @EditDeckView extends Backbone.View
   template: JST['edit_deck']
