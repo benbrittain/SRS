@@ -72,6 +72,12 @@ h2 {
   color: #707376;
 }
 
+.round_none {
+  border-radius: 0;
+  border-right-color: #fcfcfc;
+  border-left-color: #b9babb;
+}
+
 .round_left {
   border-radius: 4px 0 0 4px;
   border-right-color: #fcfcfc;
