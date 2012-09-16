@@ -15,7 +15,7 @@
   {% if current_user.is_authenticated() %}
     <p class="sidebar">Welcome back, {{ current_user.get_id() }}! <a href="/logout">Logout</a></p>
   {% endif %}
-  <h1>Aqua<em>mentis</em></h1>
+  <h1><a href="/">Aqua<em>mentis</em></a></h1>
   {% block content %}
   {% endblock %}
 </body>

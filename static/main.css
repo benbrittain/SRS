@@ -33,6 +33,15 @@ h1 em {
   font-style: normal;
 }
 
+h1 a {
+  color: #333;
+}
+
+h1 a:hover {
+  color: #707376;
+  text-decoration: none;
+}
+
 h2 {
   font: 32px/48px "Open Sans", "Helvetica Neue", sans-serif;
   font-weight: 400;
