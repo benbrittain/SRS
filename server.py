@@ -9,6 +9,7 @@ from mongo import User, Deck, Card
 from json import JSONEncoder
 import uuid
 import srs
+from random import choice
 
 app = Flask(__name__)
 
@@ -85,9 +86,12 @@ def scoreCard(username, deckName, cardName, score, user):
                 card.lastDone = datetime.datetime.now()
                 print card.eFactor
                 print card.interval
+                card.save()
                 user.save()
             
-            
+def grabNextCard(cards):
+    print cards
+    return choice(cards)
 
 @app.route('/decks/<deckName>/score', methods=['POST'])
 def scoreSRS(deckName):
@@ -100,15 +104,13 @@ def scoreSRS(deckName):
 
     scoreCard(username, deckName, cardName, score, user)
 
-
     for deck in user.decks:
         if (unicode(deck.userId) == unicode(deckName)):
-            for card in deck.cards:
-                newCard = grabNextCard(decks.cards);
-                return jsonify(id=newCard.uniqueId,front=newCard.front,back=newBack)
-#                return jsonify(id=card.uniqueId,front=card.front,back=card.back)
+            newCard = grabNextCard(deck.cards);
+            return jsonify(id=newCard.uniqueId,front=newCard.front,back=newCard.back)
     return jsonify(success=False)
 
+#                return jsonify(id=card.uniqueId,front=card.front,back=card.back)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
