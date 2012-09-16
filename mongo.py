@@ -11,6 +11,7 @@ if mongohq_url:
     app.config['MONGOALCHEMY_USER'] = o.username
     app.config['MONGOALCHEMY_PASSWORD'] = o.password
     app.config['MONGOALCHEMY_DATABASE'] = o.path[1:]
+    app.config['MONGOALCHEMY_SERVER_AUTH'] = False
 else:
     app.config['MONGOALCHEMY_DATABASE'] = 'library'
 
