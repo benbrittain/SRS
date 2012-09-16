@@ -364,8 +364,12 @@
     };
 
     DeckView.prototype.start = function() {
-      var _this = this;
-      return $.post("" + (this.model.url()) + "/start", {}, function(data) {
+      var username,
+        _this = this;
+      username = $("meta[name='username']").attr("content");
+      return $.post("" + (this.model.url()) + "/start", {
+        username: username
+      }, function(data) {
         var card;
         card = _this.model.cards.get(data.id);
         _this.index = _this.model.cards.indexOf(card);

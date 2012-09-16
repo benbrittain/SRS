@@ -146,7 +146,8 @@ class @DeckView extends Backbone.View
     @index = 0
 
   start: =>
-    $.post "#{@model.url()}/start", {}, (data) =>
+    username = $("meta[name='username']").attr("content")
+    $.post "#{@model.url()}/start", {username}, (data) =>
       card = @model.cards.get(data.id)
       @index = @model.cards.indexOf(card)
       @render()
