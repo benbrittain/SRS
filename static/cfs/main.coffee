@@ -103,7 +103,7 @@ class @DecksView extends Backbone.View
     $deck = $deck.closest('.view_deck')  unless $deck.hasClass('view_deck')
     deck = @collection.get($deck.data('id'))
     deckView = new DeckView(model: deck, el: $div, parent: this)
-    deckView.render()
+    deckView.start()
 
   editDeck: (e) =>
     $div = $("<div/>")
@@ -144,6 +144,12 @@ class @DeckView extends Backbone.View
   initialize: (options) =>
     {@parent} = options
     @index = 0
+
+  start: =>
+    $.getJSON "#{@model.url()}/start", (data) =>
+      card = @model.cards.get(data.id)
+      @index = @model.cards.indexOf(card)
+      @render()
 
   render: =>
     @$el.html @template(deck: @model, index: @index)

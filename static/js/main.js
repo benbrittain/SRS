@@ -285,7 +285,7 @@
         el: $div,
         parent: this
       });
-      return deckView.render();
+      return deckView.start();
     };
 
     DecksView.prototype.editDeck = function(e) {
@@ -346,6 +346,8 @@
 
       this.render = __bind(this.render, this);
 
+      this.start = __bind(this.start, this);
+
       this.initialize = __bind(this.initialize, this);
       return DeckView.__super__.constructor.apply(this, arguments);
     }
@@ -359,6 +361,16 @@
     DeckView.prototype.initialize = function(options) {
       this.parent = options.parent;
       return this.index = 0;
+    };
+
+    DeckView.prototype.start = function() {
+      var _this = this;
+      return $.getJSON("" + (this.model.url()) + "/start", function(data) {
+        var card;
+        card = _this.model.cards.get(data.id);
+        _this.index = _this.model.cards.indexOf(card);
+        return _this.render();
+      });
     };
 
     DeckView.prototype.render = function() {
