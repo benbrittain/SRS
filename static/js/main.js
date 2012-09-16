@@ -403,7 +403,7 @@
     DeckView.prototype.sendScore = function(e) {
       var score, username,
         _this = this;
-      score = parseInt($(e.target).val('value'), 10);
+      score = parseInt($(e.target).data('value'), 10);
       username = $("meta[name='username']").attr("content");
       return $.post("" + (this.model.url()) + "/score", {
         username: username,
