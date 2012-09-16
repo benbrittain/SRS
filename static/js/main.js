@@ -365,11 +365,13 @@
 
     DeckView.prototype.start = function() {
       var _this = this;
-      return $.getJSON("" + (this.model.url()) + "/start", function(data) {
-        var card;
-        card = _this.model.cards.get(data.id);
-        _this.index = _this.model.cards.indexOf(card);
-        return _this.render();
+      return $.post("" + (this.model.url()) + "/start", {
+        complete: function(data) {
+          var card;
+          card = _this.model.cards.get(data.id);
+          _this.index = _this.model.cards.indexOf(card);
+          return _this.render();
+        }
       });
     };
 
