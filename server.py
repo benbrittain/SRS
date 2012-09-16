@@ -87,15 +87,10 @@ def scoreCard(username, deckName, cardName, score, user):
                 print card.interval
                 card.save()
                 user.save()
-<<<<<<< HEAD
-            
+
 def grabNextCard(cards):
     print cards
     return choice(cards)
-=======
-
-
->>>>>>> e26a1e4a9e08285e9169e1a97b390b7613416420
 
 @app.route('/decks/<deckName>/score', methods=['POST'])
 def scoreSRS(deckName):
