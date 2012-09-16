@@ -317,3 +317,9 @@ textarea {
 .hr10 {
   margin-right: 10px;
 }
+
+.register_p {
+  font-size: 12px;
+  margin-left: 48px;
+  clear: both;
+}
