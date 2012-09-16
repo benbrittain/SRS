@@ -129,6 +129,7 @@ class @DecksView extends Backbone.View
 
   _createDeckSuccess: (deck) =>
     @$('.new_deck_input').prop('disabled', false)
+    deck.cards.url = "#{deck.url()}/cards"
     # TODO: Successful flash
 
   _createDeckError: =>

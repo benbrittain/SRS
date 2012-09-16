@@ -341,7 +341,8 @@
     };
 
     DecksView.prototype._createDeckSuccess = function(deck) {
-      return this.$('.new_deck_input').prop('disabled', false);
+      this.$('.new_deck_input').prop('disabled', false);
+      return deck.cards.url = "" + (deck.url()) + "/cards";
     };
 
     DecksView.prototype._createDeckError = function() {};
