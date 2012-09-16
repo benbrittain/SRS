@@ -1,8 +1,19 @@
+import os, urlparse
 from flask import Flask
 from flaskext.mongoalchemy import MongoAlchemy, BaseQuery
 app = Flask(__name__)
 
-app.config['MONGOALCHEMY_DATABASE'] = 'library'
+mongohq_url = os.environ.get('MONGOHQ_URL', None)
+if mongohq_url:
+    o = urlparse.urlparse(mongohq_url)
+    app.config['MONGOALCHEMY_SERVER'] = o.hostname
+    app.config['MONGOALCHEMY_PORT'] = o.port
+    app.config['MONGOALCHEMY_USER'] = o.username
+    app.config['MONGOALCHEMY_PASSWORD'] = o.password
+    app.config['MONGOALCHEMY_DATABASE'] = o.path[1:]
+else:
+    app.config['MONGOALCHEMY_DATABASE'] = 'library'
+
 db = MongoAlchemy(app)
 
 class Card(db.Document):

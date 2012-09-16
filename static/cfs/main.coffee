@@ -36,7 +36,8 @@ JST['edit_deck'] = thermos.template (locals) ->
       @div '.half_width.left.card_loc', 'Front'
       @div '.half_width.right.card_loc', 'Back'
     @div -> JST['edit_card']()
-  @a '.add_card.button.action.round_bottom.right', href: 'javascript:void(0);', -> "Create card"
+  @div '.clearfix', ->
+    @a '.add_card.button.action.round_bottom.right', href: 'javascript:void(0);', -> "Create card"
   locals.deck.cards.each (card) =>
     @div '.card.clearfix', ->
       @div '.left.round_left', ->
