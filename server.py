@@ -126,7 +126,7 @@ def create_card(deckName):
 @login_required
 def decks_index():
     user = User.query.filter(User.username == current_user.get_id()).first()
-    decks = map(lambda deck: {'id': deck.userId , "name": deck.name, 'cards': [{'front': card.front, 'back': card.back} for card in deck.cards]}, user.decks)
+    decks = map(lambda deck: {'id': deck.userId , "name": deck.name, 'cards': [{'id': card.uniqueId, 'front': card.front, 'back': card.back} for card in deck.cards]}, user.decks)
     return render_template('index.html', decks=json.dumps(decks))
 
 @app.route('/')
