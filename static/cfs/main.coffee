@@ -151,6 +151,7 @@ class @DeckView extends Backbone.View
       card = @model.cards.get(data.id)
       @index = @model.cards.indexOf(card)
       @render()
+    , 'json'
 
   render: =>
     @$el.html @template(deck: @model, index: @index)

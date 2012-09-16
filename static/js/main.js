@@ -374,7 +374,7 @@
         card = _this.model.cards.get(data.id);
         _this.index = _this.model.cards.indexOf(card);
         return _this.render();
-      });
+      }, 'json');
     };
 
     DeckView.prototype.render = function() {
