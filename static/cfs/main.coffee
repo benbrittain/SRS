@@ -188,8 +188,8 @@ class @EditDeckView extends Backbone.View
     super()
 
   createCard: =>
-    front = @$('.add_card_sides .left').val()
-    back = @$('.add_card_sides .right').val()
+    front = @$('.add_card_sides textarea.left').val()
+    back = @$('.add_card_sides textarea.right').val()
     # TODO: Don't do this.
     username = $("meta[name='username']").attr("content")
     @model.cards.create({front, back, username})

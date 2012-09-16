@@ -445,8 +445,8 @@
 
     EditDeckView.prototype.createCard = function() {
       var back, front, username;
-      front = this.$('.add_card_sides .left').val();
-      back = this.$('.add_card_sides .right').val();
+      front = this.$('.add_card_sides textarea.left').val();
+      back = this.$('.add_card_sides textarea.right').val();
       username = $("meta[name='username']").attr("content");
       return this.model.cards.create({
         front: front,
