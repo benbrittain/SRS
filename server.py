@@ -3,7 +3,6 @@ from flask import Flask, render_template, redirect, url_for, request, jsonify,se
 from flask.ext.login import (LoginManager, current_user, login_required,
     login_user, logout_user, UserMixin, AnonymousUser, flash,
     confirm_login, fresh_login_required)
-from flask.ext.assets import Environment, Bundle
 from LoginForm import LoginForm
 from mongo import User, Deck, Card
 from json import JSONEncoder
@@ -77,7 +76,7 @@ def scoreCard(username, deckName, cardName, score, user):
                 if card.eFactor < 3:
                     card.repetition = 1
                 if card.repetition == 1:
-                    card.interval =1 
+                    card.interval = 1
                 elif card.repetition == 2:
                     card.interval = 6
                 elif card.repetition > 2:
@@ -86,8 +85,8 @@ def scoreCard(username, deckName, cardName, score, user):
                 print card.eFactor
                 print card.interval
                 user.save()
-            
-            
+
+
 
 @app.route('/decks/<deckName>/score', methods=['POST'])
 def scoreSRS(deckName):
