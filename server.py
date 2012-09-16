@@ -7,7 +7,7 @@ from flask.ext.login import (LoginManager, current_user, login_required,
 from LoginForm import LoginForm
 from mongo import User, Deck, Card
 from json import JSONEncoder
-
+import uuid
 
 app = Flask(__name__)
 
@@ -110,7 +110,7 @@ def decks_index():
 def decks_create():
     print request.json
     user = User.query.filter(User.username == request.json['username']).first()
-    deck = Deck(name=request.json['name'], userId=str(user.mongo_id) + str(time.time()),cards=[])
+    deck = Deck(name=request.json['name'], userId=uuid.uuid1(), cards=[])
     user.decks.append(deck)
     if user.save():
         return jsonify(name=deck.name, userId = name.userId, cards=[])
