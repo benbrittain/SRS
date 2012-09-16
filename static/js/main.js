@@ -408,13 +408,16 @@
     };
 
     DeckView.prototype.sendScore = function(e) {
-      var score, username,
+      var card, score, uniqueId, username,
         _this = this;
       score = parseInt($(e.target).data('value'), 10);
       username = $("meta[name='username']").attr("content");
+      card = this.model.cards.at(this.index);
+      uniqueId = card.id;
       return $.post("" + (this.model.url()) + "/score", {
         username: username,
-        score: score
+        score: score,
+        uniqueId: uniqueId
       }, function(data) {
         if (data.id != null) {
           return _this.displayNext(data.id);

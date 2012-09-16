@@ -165,7 +165,9 @@ class @DeckView extends Backbone.View
   sendScore: (e) =>
     score = parseInt($(e.target).data('value'), 10)
     username = $("meta[name='username']").attr("content")
-    $.post "#{@model.url()}/score", {username, score}, (data) =>
+    card = @model.cards.at(@index)
+    uniqueId = card.id
+    $.post "#{@model.url()}/score", {username, score, uniqueId}, (data) =>
       if data.id?
         @displayNext(data.id)
       else
